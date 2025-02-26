@@ -1,0 +1,246 @@
+/* Booking Frontend Tabls */
+.brf-post-item h3 {
+    background-color: white;
+    color: #012452;
+    width: max-content;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 15px;
+    text-transform: uppercase;
+    box-shadow: 0px 0px 20px 0px #d6d7db;
+}
+
+h3#selected-date-title {
+    background-color: #012452;
+    color: white;
+    font-size: 16px;
+    width: 85%;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+td a.button.button-primary {
+    padding: 5px;
+    background: #0fab00;
+    border-radius: 5px;
+    color: white;
+}
+td a.button {
+    padding: 5px;
+    border-radius: 5px;
+}
+/* Booking Frontend Table End */
+
+/* Search Bar */
+#bookingSearch{
+    width: 100%;
+    border: 1px solid #6f6f6f54;
+    border-radius: 100px;
+    padding: .5rem 1rem;
+    transition: all .3s;
+
+}
+.booking-table-container {
+	margin-top:40px;
+    max-width: 100%;
+
+}
+.booking-table{
+	margin:0px;
+	margin-top:0px !important;
+}
+/* Search Bar End  */
+/*  */
+button.time-slot:hover, button.time-slot.selected, .time-slot.active {
+    background: #012452 !important;
+	color:white !important;
+}
+
+button.time-slot{
+    background: #fff !important;
+	color:#012452!important;
+/* 	border: 1px solid gray; */
+	border-radius:10px;
+	    box-shadow: 0px 0px 20px 0px #d6d7db;
+}
+.time-slot.unavailable, #book-now-btn:disabled {
+    background-color:#e7e7e7  !important;
+	color:#c7c7c7 !important;
+	cursor:unset;
+	border:none;
+		    box-shadow:0px 0px 0px 0px #d6d7db;
+}
+.time-slot.unavailable:hover, #book-now-btn:disabled:hover {
+    background-color: #e7e7e7  !important;
+	color:#c7c7c7  !important;
+	cursor:unset;
+}
+.filter-btn{
+    background: white !important;
+	color:black!important;
+	font-weight:500;
+	    border-color: #00000000;
+    border-radius: 10px;
+	    box-shadow: 0px 0px 20px 0px #d6d7db;
+}
+.filter-btn:hover{
+	    background-color: #1b3bbd !important;
+    color: white !important;
+    font-weight: 500;
+    opacity: 100%;
+    border-color: #00000000;
+    border-radius: 10px;
+		    box-shadow: 0px 0px 20px 0px #d6d7db;
+}
+.filter-btn.active{
+	    background-color: #1b3bbd !important;
+    color: white !important;
+    font-weight: 500;
+    opacity: 100%;
+    border-color: #1b3bbd;
+    border-radius: 10px;
+		    box-shadow: 0px 0px 20px 0px #d6d7db;
+}
+#book-now-btn {
+    background-color: #1b3bbd   !important;
+    color: white !important;
+    font-weight: 500;
+    opacity: 100%;
+    border-color: #1b3bbd!important;
+    border-radius: 10px;
+	width:35%;
+}
+#book-now-btn:hover {
+    background-color: #1b3bbd  !important;
+    color: white !important;
+    font-weight: 500;
+    opacity: 100%;
+    border-color: #1b3bbd;
+    border-radius: 10px;
+}
+#check-availability-btn{
+  background-color: #1b3bbd !important;
+    color: white !important;
+    font-weight: 500;
+    opacity: 100%;
+    border-color: #1b3bbd;
+    border-radius: 10px;
+}
+#check-availability-btn:hover{
+  background-color:  #012452 !important;
+    color: white !important;
+    font-weight: 500;
+    opacity: 100%;
+    border-color: #012452;
+    border-radius: 10px;
+}
+div#brf-filter-buttons {
+    margin: 40px 0px;
+	display:flex;
+	gap:15px;
+}
+button.fc-next-button.fc-button.fc-button-primary {
+    background: #012452;
+}
+td.fc-day.fc-day-mon.fc-day-today.fc-daygrid-day {
+    background: #1b3bbe;
+    color: white;
+}
+.fc .fc-daygrid-day-frame {
+    min-height: 100%;
+    position: relative;
+    display: flex
+;
+    justify-content: center;
+}
+.fc .fc-daygrid-day-top {
+    display: flex
+;
+    justify-content: center;
+    align-items: center;
+}
+.fc .fc-daygrid-day-top .fc-highlight {
+    background: rgb(1 36 82);
+    color: white !important;
+}
+.fc .fc-day-other .fc-daygrid-day-top {
+    opacity: 1;
+}
+.fc .fc-scroller-liquid-absolute {
+    inset: unset;
+    position: absolute;
+}
+/*  */
+
+/* @ hour rental booking page style */
+.elementor-element.elementor-element-0e7a606.e-con-full.e-flex.e-con.e-child {
+	font-family: 'Montserrat';
+}
+
+
+
+
+
+
+
+
+.time-slot.booked-slot {
+    background: gray ! IMPORTANT;
+}
+.time-slot {
+	    background-color: #012452 !important;
+    color: white !important;
+    font-weight: 500;
+    opacity: 100%;
+}
+
+.boat-booking-filters button{
+	    background-color: #012452 !important;
+    color: white !important;
+    font-weight: 500;
+    opacity: 100%;
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* CPT Boat Rental Start */
+button.time-slot {
+    width: 33%;
+}
+.time-slot {
+	width:40%;
+    margin: 5px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.time-slot.booked-slot {
+    background-color: #f44336;
+    cursor: not-allowed;
+}
+
+.time-slot.active {
+    background-color: #2196F3;
+}
+
+div#dynamic-time-slots-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+/* CPT Boat Rental End */
