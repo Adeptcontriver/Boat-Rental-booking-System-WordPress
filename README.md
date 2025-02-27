@@ -1,53 +1,50 @@
-# Boat-Rental-booking-System-WordPress
+Boat Rental Booking System – WordPress
 
-WordPress Booking Rental System Created With Custom Post types, Acf Field , Gravity Form
+A fully customized WordPress booking system built with Custom Post Types, Advanced Custom Fields (ACF), and Gravity Forms to streamline boat rentals and booking approvals.
 
-Summary:
+Key Features
 
+✅ Admin Approval System
+	•	Admins can approve, reject, or manage bookings from both the frontend and backend.
+	•	Booking status updates automatically upon approval.
 
+✅ Custom Post Types
+	1.	Boat Rentals (boat-rental) – Stores details of available boats for rent.
+	2.	Bookings (booking) – Manages reservations and their statuses.
 
-Admin Approval Feature : Admin can Approve booking from the frontend and backend as well.
+ACF Field Groups & Structure
 
+🛥 Boat Rental Details
 
-We Have Two Custom Post Types:
-post type = boat-rental
-post type = booking
+Stores key details about each rental boat.
 
-Acf Field Groups
+Label	Field Name	Type
+Boat Name	boat_name	Text
+Booking Hours	booking_hours	Number
+Hourly Rental Price	hourly_rental_price	Number
+Boat Time Slots	boat_time_slots	Repeater
+Calendar Start Date	calendar_start_date	Date Picker
+Calendar End Date	calendar_end_date	Date Picker
 
-Boat Rental Details:
-Boat Booking Status:
-Boat Rental Filter:
+🔹 Boat Time Slots (Repeater Fields)
+	•	Time Slot (time_slot) – Type: Time Picker
 
-Boat Rental Details:
-Acf Field Names and Type:
-    Label : Boat Name -> Name : boat_name -> Type : Text
-    Label : Booking Hours -> Name : booking_hours -> Type : Number
-    Label : Hourly Rental Price -> Name : hourly_rental_price -> Type : Number
-    Label : Boat Time Slots -> Name : boat_time_slots -> Type : Repeator
+📅 Boat Booking Status
 
-            Sub Field: 
-            Label : Time Slots -> Name : time_slot -> Type : Time Picker
-   
-    Label : Calendar Start Date -> Name : calendar_start_date -> Type : Date Picker
-    Label : Calendar End Date -> Name : calendar_end_date -> Type : Date Picker
+Tracks booking details and status updates.
 
+Label	Field Name	Type
+Boat ID	boat_id	Text
+Time Duration	time_duration	Text
+Client Name	client_name	Text
+Booking Email	booking_email	Text
+Booking Date	booking_date	Text
+Time Slot	time_slot	Text
+Booking Status	booking_status	Select
 
-Boat Booking Status:
-Acf Field Names and Type:
+🔹 Booking Status Options:
+	•	Confirmed
+	•	Pending (Default)
+	•	Cancelled
 
-    Label : Boat Id -> Name : boat_id -> Type : Text
-    Label : Time Duration -> Name : time_duration -> Type : Text
-    Label : Client Name -> Name : client_name -> Type : Text
-    Label : Booking Email -> Name : booking_email -> Type : Text
-    Label : Booking Date -> Name : booking_date -> Type : Text
-    Label : Time Slot -> Name : time_slot -> Type : Text
-    Label : Booking Status -> Name : booking_status -> Type : Select
-
-            Select Option: 
-
-                Confirmed : Confirmed
-                pending   : Pending
-                cancelled : Cancelled
-
-                Default Value: pending
+This system ensures seamless rental management, flexible scheduling, and efficient approval workflows for both admins and customers. 🚀
