@@ -1,0 +1,1750 @@
+[
+    {
+        "key": "group_67b8b3a2513e1",
+        "title": "Boat Booking Status",
+        "fields": [
+            {
+                "key": "field_67b8b3a4468aa",
+                "label": "Boat ID",
+                "name": "boat_id",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67bccd1ebab50",
+                "label": "TIme Duration",
+                "name": "time_duration",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67bcbfa6ab226",
+                "label": "Client Name",
+                "name": "client_name",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67bcbf093712c",
+                "label": "Booking Email",
+                "name": "booking_email",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67b8b3c7468ab",
+                "label": "Booking Date",
+                "name": "booking_date",
+                "aria-label": "",
+                "type": "date_picker",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "display_format": "d\/m\/Y",
+                "return_format": "d\/m\/Y",
+                "first_day": 1,
+                "allow_in_bindings": 0
+            },
+            {
+                "key": "field_67b8b3fc468ac",
+                "label": "Time Slot",
+                "name": "time_slot",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67b8b447468ad",
+                "label": "Booking Status",
+                "name": "booking_status",
+                "aria-label": "",
+                "type": "select",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "confirmed": "Confirmed",
+                    "pending": "Pending",
+                    "canceled": "Canceled"
+                },
+                "default_value": "pending",
+                "return_format": "value",
+                "multiple": 0,
+                "allow_null": 0,
+                "allow_in_bindings": 0,
+                "ui": 0,
+                "ajax": 0,
+                "placeholder": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "booking"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_67bb8fd7d9b8e",
+        "title": "Boat Rental Filters",
+        "fields": [
+            {
+                "key": "field_67bb8fda329b2",
+                "label": "With Captain",
+                "name": "with_captain",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "50",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67bb8ff8329b3",
+                "label": "Without-captain",
+                "name": "without_captain",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "50",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "page"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_67b788da98a1f",
+        "title": "Content page",
+        "fields": [
+            {
+                "key": "field_67b788dc72793",
+                "label": "Content page image",
+                "name": "content_page_image",
+                "aria-label": "",
+                "type": "image",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "return_format": "array",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": "",
+                "allow_in_bindings": 0,
+                "preview_size": "medium"
+            },
+            {
+                "key": "field_67b7891072794",
+                "label": "Content page text",
+                "name": "content_page_text",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "rows": "",
+                "placeholder": "",
+                "new_lines": ""
+            },
+            {
+                "key": "field_67b7932f046e2",
+                "label": "Form short code",
+                "name": "",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "service"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_67cb08bb421bf",
+        "title": "Drop Off Rental Booking Status",
+        "fields": [
+            {
+                "key": "field_67cb08bb44b7e",
+                "label": "Boat ID",
+                "name": "boat_id",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb08bb44bb5",
+                "label": "TIme Duration",
+                "name": "time_duration",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb08bb44beb",
+                "label": "Client Name",
+                "name": "client_name",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb08bb44c21",
+                "label": "Booking Email",
+                "name": "booking_email",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb08bb44c57",
+                "label": "Booking Date",
+                "name": "booking_date",
+                "aria-label": "",
+                "type": "date_picker",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "display_format": "d\/m\/Y",
+                "return_format": "d\/m\/Y",
+                "first_day": 1,
+                "allow_in_bindings": 0
+            },
+            {
+                "key": "field_67cb08bb44c8d",
+                "label": "Time Slot",
+                "name": "time_slot",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb08bb44cc3",
+                "label": "Booking Status",
+                "name": "booking_status",
+                "aria-label": "",
+                "type": "select",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "confirmed": "Confirmed",
+                    "pending": "Pending",
+                    "canceled": "Canceled"
+                },
+                "default_value": "pending",
+                "return_format": "value",
+                "multiple": 0,
+                "allow_null": 0,
+                "allow_in_bindings": 0,
+                "ui": 0,
+                "ajax": 0,
+                "placeholder": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "drop-off-rental-book"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_67cb082d96c81",
+        "title": "Drop Off Rental Details",
+        "fields": [
+            {
+                "key": "field_67cb082d996de",
+                "label": "Boat Name",
+                "name": "boat_name",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb082d99715",
+                "label": "Booking Days",
+                "name": "booking_days",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb082d9974c",
+                "label": "Drop Off Rental Price",
+                "name": "drop_off_rental_price",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb082d99782",
+                "label": "Boat Time Slots",
+                "name": "boat_time_slots",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Row",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_67cb082d9eddb",
+                        "label": "Time Slot",
+                        "name": "time_slot",
+                        "aria-label": "",
+                        "type": "time_picker",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "display_format": "g:i a",
+                        "return_format": "g:i a",
+                        "allow_in_bindings": 0,
+                        "parent_repeater": "field_67cb082d99782"
+                    }
+                ]
+            },
+            {
+                "key": "field_67cb082d997b8",
+                "label": "Calendar Start Date",
+                "name": "calendar_start_date",
+                "aria-label": "",
+                "type": "date_picker",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "display_format": "d\/m\/Y",
+                "return_format": "F j, Y",
+                "first_day": 1,
+                "allow_in_bindings": 0
+            },
+            {
+                "key": "field_67cb082d997ef",
+                "label": "Calendar End Date",
+                "name": "calendar_end_date",
+                "aria-label": "",
+                "type": "date_picker",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "display_format": "d\/m\/Y",
+                "return_format": "d\/m\/Y",
+                "first_day": 1,
+                "allow_in_bindings": 0
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "drop-off-rental"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "acf_after_title",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_67cb3068cc180",
+        "title": "Fishing Charters Booking Status",
+        "fields": [
+            {
+                "key": "field_67cb3068cf1eb",
+                "label": "Boat ID",
+                "name": "boat_id",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb3068cf228",
+                "label": "TIme Duration",
+                "name": "time_duration",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb3068cf262",
+                "label": "Client Name",
+                "name": "client_name",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb3068cf29c",
+                "label": "Booking Email",
+                "name": "booking_email",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb3068cf2d6",
+                "label": "Booking Date",
+                "name": "booking_date",
+                "aria-label": "",
+                "type": "date_picker",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "display_format": "d\/m\/Y",
+                "return_format": "d\/m\/Y",
+                "first_day": 1,
+                "allow_in_bindings": 0
+            },
+            {
+                "key": "field_67cb3068cf30f",
+                "label": "Time Slot",
+                "name": "time_slot",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb3068cf348",
+                "label": "Booking Status",
+                "name": "booking_status",
+                "aria-label": "",
+                "type": "select",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "confirmed": "Confirmed",
+                    "pending": "Pending",
+                    "canceled": "Canceled"
+                },
+                "default_value": "pending",
+                "return_format": "value",
+                "multiple": 0,
+                "allow_null": 0,
+                "allow_in_bindings": 0,
+                "ui": 0,
+                "ajax": 0,
+                "placeholder": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "fishing-charter-book"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_67cb300eec6c1",
+        "title": "Fishing Charters Detail",
+        "fields": [
+            {
+                "key": "field_67cb300eef9b9",
+                "label": "Boat Name",
+                "name": "boat_name",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb300eef9f1",
+                "label": "Booking Hours",
+                "name": "booking_hours",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb300eefa28",
+                "label": "Fishing Charter Price",
+                "name": "fishing_charter_price",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67cb300eefa5f",
+                "label": "Boat Time Slots",
+                "name": "boat_time_slots",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Row",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_67cb300f0217b",
+                        "label": "Time Slot",
+                        "name": "time_slot",
+                        "aria-label": "",
+                        "type": "time_picker",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "display_format": "g:i a",
+                        "return_format": "g:i a",
+                        "allow_in_bindings": 0,
+                        "parent_repeater": "field_67cb300eefa5f"
+                    }
+                ]
+            },
+            {
+                "key": "field_67cb300eefa96",
+                "label": "Calendar Start Date",
+                "name": "calendar_start_date",
+                "aria-label": "",
+                "type": "date_picker",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "display_format": "d\/m\/Y",
+                "return_format": "F j, Y",
+                "first_day": 1,
+                "allow_in_bindings": 0
+            },
+            {
+                "key": "field_67cb300eefacc",
+                "label": "Calendar End Date",
+                "name": "calendar_end_date",
+                "aria-label": "",
+                "type": "date_picker",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "display_format": "d\/m\/Y",
+                "return_format": "d\/m\/Y",
+                "first_day": 1,
+                "allow_in_bindings": 0
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "fishing-charter"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "acf_after_title",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "group_67b8933d43de2",
+        "title": "Hourly Boat Rental Details",
+        "fields": [
+            {
+                "key": "field_67b8933f80512",
+                "label": "Boat Name",
+                "name": "boat_name",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67b8963fe97d0",
+                "label": "Booking Hours",
+                "name": "booking_hours",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67b893fbf47d6",
+                "label": "Hourly Rental Price",
+                "name": "hourly_rental_price",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_67b893b4f47d4",
+                "label": "Boat Time Slots",
+                "name": "boat_time_slots",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Add Row",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_67b893cef47d5",
+                        "label": "Time Slot",
+                        "name": "time_slot",
+                        "aria-label": "",
+                        "type": "time_picker",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "display_format": "g:i a",
+                        "return_format": "g:i a",
+                        "allow_in_bindings": 0,
+                        "parent_repeater": "field_67b893b4f47d4"
+                    }
+                ]
+            },
+            {
+                "key": "field_67b89417f47d7",
+                "label": "Calendar Start Date",
+                "name": "calendar_start_date",
+                "aria-label": "",
+                "type": "date_picker",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "display_format": "d\/m\/Y",
+                "return_format": "F j, Y",
+                "first_day": 1,
+                "allow_in_bindings": 0
+            },
+            {
+                "key": "field_67b89441f47d8",
+                "label": "Calendar End Date",
+                "name": "calendar_end_date",
+                "aria-label": "",
+                "type": "date_picker",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "33",
+                    "class": "",
+                    "id": ""
+                },
+                "display_format": "d\/m\/Y",
+                "return_format": "d\/m\/Y",
+                "first_day": 1,
+                "allow_in_bindings": 0
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "boat-rental"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "acf_after_title",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    },
+    {
+        "key": "post_type_67b8b165b151a",
+        "title": "Boat Bookings",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "booking",
+        "advanced_configuration": true,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Boat Bookings",
+            "singular_name": "Boat Booking",
+            "menu_name": "Bookings",
+            "all_items": "All Bookings",
+            "edit_item": "Edit Booking",
+            "view_item": "View Booking",
+            "view_items": "View Bookings",
+            "add_new_item": "Add New Booking",
+            "add_new": "Add New Booking",
+            "new_item": "New Booking",
+            "parent_item_colon": "Parent Booking:",
+            "search_items": "Search Bookings",
+            "not_found": "No bookings found",
+            "not_found_in_trash": "No bookings found in Trash",
+            "archives": "Booking Archives",
+            "attributes": "Booking Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into booking",
+            "uploaded_to_this_item": "Uploaded to this booking",
+            "filter_items_list": "Filter bookings list",
+            "filter_by_date": "Filter bookings by date",
+            "items_list_navigation": "Bookings list navigation",
+            "items_list": "Bookings list",
+            "item_published": "Booking published.",
+            "item_published_privately": "Booking published privately.",
+            "item_reverted_to_draft": "Booking reverted to draft.",
+            "item_scheduled": "Booking scheduled.",
+            "item_updated": "Booking updated.",
+            "item_link": "Booking Link",
+            "item_link_description": "A link to a booking."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": false,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": "",
+        "menu_icon": {
+            "type": "dashicons",
+            "value": "dashicons-editor-bold"
+        },
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "editor",
+            "thumbnail",
+            "custom-fields"
+        ],
+        "taxonomies": "",
+        "has_archive": false,
+        "has_archive_slug": "",
+        "rewrite": {
+            "permalink_rewrite": "post_type_key",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    },
+    {
+        "key": "post_type_67b891f465287",
+        "title": "Boats Rental",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "boat-rental",
+        "advanced_configuration": true,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Boats Rental",
+            "singular_name": "Boat Rental",
+            "menu_name": "Boat Rental Booking",
+            "all_items": "All Boats",
+            "edit_item": "Edit Boat Rental",
+            "view_item": "View Boat Rental",
+            "view_items": "View Boat Rental ",
+            "add_new_item": "Add New Boat Rental",
+            "add_new": "Add New Boat Rental",
+            "new_item": "New Boat Rental",
+            "parent_item_colon": "Parent Boat Rental:",
+            "search_items": "Search Boat Rental Booking",
+            "not_found": "No boat rental booking found",
+            "not_found_in_trash": "No boat rental booking found in Trash",
+            "archives": "Boat Rental Archives",
+            "attributes": "Boat Rental Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into boat rental",
+            "uploaded_to_this_item": "Uploaded to this boat rental",
+            "filter_items_list": "Filter boat rental booking list",
+            "filter_by_date": "Filter boat rental booking by date",
+            "items_list_navigation": "Boat Rental Booking list navigation",
+            "items_list": "Boat Rental Booking list",
+            "item_published": "Boat Rental published.",
+            "item_published_privately": "Boat Rental published privately.",
+            "item_reverted_to_draft": "Boat Rental reverted to draft.",
+            "item_scheduled": "Boat Rental scheduled.",
+            "item_updated": "Boat Rental updated.",
+            "item_link": "Boat Rental Link",
+            "item_link_description": "A link to a boat rental."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": true,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": "",
+        "menu_icon": {
+            "type": "dashicons",
+            "value": "dashicons-awards"
+        },
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "editor",
+            "excerpt",
+            "thumbnail",
+            "custom-fields"
+        ],
+        "taxonomies": [
+            "category",
+            "post_tag"
+        ],
+        "has_archive": false,
+        "has_archive_slug": "",
+        "rewrite": {
+            "permalink_rewrite": "post_type_key",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    },
+    {
+        "key": "post_type_67cb09663d0a6",
+        "title": "Drop Off Bookings",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "drop-off-rental-book",
+        "advanced_configuration": true,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Drop Off Bookings",
+            "singular_name": "Drop Off Booking",
+            "menu_name": "Drop Off Rental Booking",
+            "all_items": "All Drop Off Rental Booking",
+            "edit_item": "Edit Drop Off Rental Booking",
+            "view_item": "View Drop Off Rental Booking",
+            "view_items": "View Drop Off Rental Booking",
+            "add_new_item": "Add New Drop Off Rental Booking",
+            "add_new": "Add New Drop Off Rental Booking",
+            "new_item": "New Drop Off Rental Booking",
+            "parent_item_colon": "Parent Drop Off Rental Booking:",
+            "search_items": "Search Drop Off Rental Booking:",
+            "not_found": "No drop off rental booking found",
+            "not_found_in_trash": "No drop o found in Trash",
+            "archives": "Drop Off Rental Booking Archives",
+            "attributes": "Drop Off Rental Booking Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into drop off rental booking",
+            "uploaded_to_this_item": "Uploaded to this drop off rental booking",
+            "filter_items_list": "Filter drop o list",
+            "filter_by_date": "Filter drop off rental booking by date",
+            "items_list_navigation": "Drop O list navigation",
+            "items_list": "Drop O list",
+            "item_published": "Drop Off Rental Booking published.",
+            "item_published_privately": "Drop Off Rental Booking published privately.",
+            "item_reverted_to_draft": "Drop Off Rental Booking reverted to draft.",
+            "item_scheduled": "Drop Off Rental Booking scheduled.",
+            "item_updated": "Drop Off Rental Booking updated.",
+            "item_link": "Drop Off Rental Booking Link",
+            "item_link_description": "A link to a drop off rental booking."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": false,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": "",
+        "menu_icon": {
+            "type": "dashicons",
+            "value": "dashicons-editor-bold"
+        },
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "editor",
+            "thumbnail",
+            "custom-fields"
+        ],
+        "taxonomies": "",
+        "has_archive": false,
+        "has_archive_slug": "",
+        "rewrite": {
+            "permalink_rewrite": "post_type_key",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    },
+    {
+        "key": "post_type_67ca1281bb4d7",
+        "title": "Drop Off Rentals",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "drop-off-rental",
+        "advanced_configuration": true,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Drop Off Rentals",
+            "singular_name": "Drop Off Rental",
+            "menu_name": "Drop Off Rentals",
+            "all_items": "All Drop Off Rentals",
+            "edit_item": "Edit Drop Off Rental",
+            "view_item": "View Drop Off Rental",
+            "view_items": "View Drop Off Rentals",
+            "add_new_item": "Add New Drop Off Rental",
+            "add_new": "Add New Drop Off Rental",
+            "new_item": "New Drop Off Rental",
+            "parent_item_colon": "Parent Drop Off Rental:",
+            "search_items": "Search Drop Off Rentals",
+            "not_found": "No drop off rentals found",
+            "not_found_in_trash": "No drop off rentals found in Trash",
+            "archives": "Drop Off Rental Archives",
+            "attributes": "Drop Off Rental Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into drop off rental",
+            "uploaded_to_this_item": "Uploaded to this drop off rental",
+            "filter_items_list": "Filter drop off rentals list",
+            "filter_by_date": "Filter drop off rentals by date",
+            "items_list_navigation": "Drop Off Rentals list navigation",
+            "items_list": "Drop Off Rentals list",
+            "item_published": "Drop Off Rental published.",
+            "item_published_privately": "Drop Off Rental published privately.",
+            "item_reverted_to_draft": "Drop Off Rental reverted to draft.",
+            "item_scheduled": "Drop Off Rental scheduled.",
+            "item_updated": "Drop Off Rental updated.",
+            "item_link": "Drop Off Rental Link",
+            "item_link_description": "A link to a drop off rental."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": true,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": "",
+        "menu_icon": {
+            "type": "dashicons",
+            "value": "dashicons-awards"
+        },
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "editor",
+            "excerpt",
+            "thumbnail",
+            "custom-fields"
+        ],
+        "taxonomies": [
+            "category",
+            "post_tag"
+        ],
+        "has_archive": false,
+        "has_archive_slug": "",
+        "rewrite": {
+            "permalink_rewrite": "post_type_key",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    },
+    {
+        "key": "post_type_67ca131d228e9",
+        "title": "Fishing Charters",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "fishing-charter",
+        "advanced_configuration": true,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Fishing Charters",
+            "singular_name": "Fishing Charter",
+            "menu_name": "Fishing Charters",
+            "all_items": "All Fishing Charters",
+            "edit_item": "Edit Fishing Charter",
+            "view_item": "View Fishing Charter",
+            "view_items": "View Fishing Charters",
+            "add_new_item": "Add New Fishing Charter",
+            "add_new": "Add New Fishing Charter",
+            "new_item": "New Fishing Charter",
+            "parent_item_colon": "Parent Fishing Charter:",
+            "search_items": "Search Fishing Charters",
+            "not_found": "No fishing charters found",
+            "not_found_in_trash": "No fishing charters found in Trash",
+            "archives": "Fishing Charter Archives",
+            "attributes": "Fishing Charter Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into fishing charter",
+            "uploaded_to_this_item": "Uploaded to this fishing charter",
+            "filter_items_list": "Filter fishing charters list",
+            "filter_by_date": "Filter fishing charters by date",
+            "items_list_navigation": "Fishing Charters list navigation",
+            "items_list": "Fishing Charters list",
+            "item_published": "Fishing Charter published.",
+            "item_published_privately": "Fishing Charter published privately.",
+            "item_reverted_to_draft": "Fishing Charter reverted to draft.",
+            "item_scheduled": "Fishing Charter scheduled.",
+            "item_updated": "Fishing Charter updated.",
+            "item_link": "Fishing Charter Link",
+            "item_link_description": "A link to a fishing charter."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": true,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": "",
+        "menu_icon": {
+            "type": "dashicons",
+            "value": "dashicons-redo"
+        },
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "editor",
+            "excerpt",
+            "thumbnail",
+            "custom-fields"
+        ],
+        "taxonomies": [
+            "category",
+            "post_tag"
+        ],
+        "has_archive": false,
+        "has_archive_slug": "",
+        "rewrite": {
+            "permalink_rewrite": "post_type_key",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    },
+    {
+        "key": "post_type_67cb2fadcd767",
+        "title": "Fishing Charters Booking",
+        "menu_order": 0,
+        "active": true,
+        "post_type": "fishing-charter-book",
+        "advanced_configuration": true,
+        "import_source": "",
+        "import_date": "",
+        "labels": {
+            "name": "Fishing Charters Booking",
+            "singular_name": "Fishing Charter Booking",
+            "menu_name": "Fishing Charter",
+            "all_items": "All Fishing Charter",
+            "edit_item": "Edit Fishing Charter Booking",
+            "view_item": "View Fishing Charter Booking",
+            "view_items": "View Fishing Charter",
+            "add_new_item": "Add New Fishing Charter Booking",
+            "add_new": "Add New Fishing Charter Booking",
+            "new_item": "New Fishing Charter Booking",
+            "parent_item_colon": "Parent Fishing Charter Booking:",
+            "search_items": "Search Fishing Charter",
+            "not_found": "No fishing charter found",
+            "not_found_in_trash": "No fishing charter found in Trash",
+            "archives": "Fishing Charter Booking Archives",
+            "attributes": "Fishing Charter Booking Attributes",
+            "featured_image": "",
+            "set_featured_image": "",
+            "remove_featured_image": "",
+            "use_featured_image": "",
+            "insert_into_item": "Insert into fishing charter booking",
+            "uploaded_to_this_item": "Uploaded to this fishing charter booking",
+            "filter_items_list": "Filter fishing charter list",
+            "filter_by_date": "Filter fishing charter by date",
+            "items_list_navigation": "Fishing Charter list navigation",
+            "items_list": "Fishing Charter list",
+            "item_published": "Fishing Charter Booking published.",
+            "item_published_privately": "Fishing Charter Booking published privately.",
+            "item_reverted_to_draft": "Fishing Charter Booking reverted to draft.",
+            "item_scheduled": "Fishing Charter Booking scheduled.",
+            "item_updated": "Fishing Charter Booking updated.",
+            "item_link": "Fishing Charter Booking Link",
+            "item_link_description": "A link to a fishing charter booking."
+        },
+        "description": "",
+        "public": true,
+        "hierarchical": false,
+        "exclude_from_search": false,
+        "publicly_queryable": true,
+        "show_ui": true,
+        "show_in_menu": true,
+        "admin_menu_parent": "",
+        "show_in_admin_bar": true,
+        "show_in_nav_menus": true,
+        "show_in_rest": true,
+        "rest_base": "",
+        "rest_namespace": "wp\/v2",
+        "rest_controller_class": "WP_REST_Posts_Controller",
+        "menu_position": "",
+        "menu_icon": {
+            "type": "dashicons",
+            "value": "dashicons-editor-bold"
+        },
+        "rename_capabilities": false,
+        "singular_capability_name": "post",
+        "plural_capability_name": "posts",
+        "supports": [
+            "title",
+            "editor",
+            "thumbnail",
+            "custom-fields"
+        ],
+        "taxonomies": "",
+        "has_archive": false,
+        "has_archive_slug": "",
+        "rewrite": {
+            "permalink_rewrite": "post_type_key",
+            "with_front": "1",
+            "feeds": "0",
+            "pages": "1"
+        },
+        "query_var": "post_type_key",
+        "query_var_name": "",
+        "can_export": true,
+        "delete_with_user": false,
+        "register_meta_box_cb": "",
+        "enter_title_here": ""
+    }
+]
