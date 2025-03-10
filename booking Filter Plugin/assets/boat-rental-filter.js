@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeCalendar();
 
     // Default button is active
-    const defaultButton = document.getElementById('brf-with-captain-btn');
+    const defaultButton = document.getElementById('brf-without-captain-btn');
     if (defaultButton) {
         defaultButton.classList.add('active');
         const defaultTag = defaultButton.getAttribute('data-tag');
@@ -188,6 +188,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+            
+
+
     // Add event listener for the "Book Now" button
     document.getElementById('book-now-btn').addEventListener('click', function() {
         const selectedTime = document.getElementById('selected-time').value;
@@ -201,4 +204,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Redirect to the form page
         window.location.href = '/boat-booking' + query;
     });
+
+    
 });
+
+
+
+
+
+
