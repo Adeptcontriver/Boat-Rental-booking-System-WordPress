@@ -1354,3 +1354,341 @@ function fishing_charter_handle_cancel_booking() {
     exit;
 }
 add_action('admin_post_fishing_charter_cancel_booking', 'fishing_charter_handle_cancel_booking');
+
+
+
+
+// Lake Booking System
+// ACF : Meta Fields
+// Custom Post Type : Lake Services & Lake Services Booking
+// Booking System
+function service_lake_fetch_time_slots() {
+    $selectedDate = sanitize_text_field($_POST['date']);
+    $boat_id = intval($_POST['boat_id']);
+    $time_slots = array();
+
+    error_log("Fetching time slots for date: $selectedDate and boat ID: $boat_id");
+
+    if (have_rows('boat_time_slots', $boat_id)) {
+        while (have_rows('boat_time_slots', $boat_id)) {
+            the_row();
+            $time_slot = get_sub_field('time_slot');
+
+            error_log("Checking time slot: $time_slot");
+
+            // Check for bookings with status 'confirmed'
+            $booking_query = new WP_Query(array(
+                'post_type' => 'service-lake-booking',
+                'posts_per_page' => 1, // Limit to one result for efficiency
+                'meta_query' => array(
+                    'relation' => 'AND',
+                    array(
+                        'key' => 'boat_id',
+                        'value' => $boat_id,
+                        'compare' => '=',
+                    ),
+                    array(
+                        'key' => 'booking_date',
+                        'value' => $selectedDate,
+                        'compare' => '=',
+                    ),
+                    array(
+                        'key' => 'time_slot',
+                        'value' => $time_slot,
+                        'compare' => '=',
+                    ),
+                    array(
+                        'key' => 'booking_status',
+                        'value' => 'confirmed',
+                        'compare' => '=',
+                    ),
+                ),
+            ));
+
+            // Debug: Log the query results
+            error_log("Query results for time slot $time_slot: " . print_r($booking_query->posts, true));
+
+            if (!$booking_query->have_posts()) {
+                $time_slots[] = array(
+                    'time' => $time_slot,
+                    'available' => true,
+                );
+            } else {
+                $time_slots[] = array(
+                    'time' => $time_slot,
+                    'available' => false, // Mark it as booked
+                );
+            }
+        }
+    }
+
+    error_log("Time slots fetched: " . print_r($time_slots, true));
+
+    wp_send_json_success(array('slots' => $time_slots));
+}
+add_action('wp_ajax_service_lake_fetch_time_slots', 'service_lake_fetch_time_slots');
+add_action('wp_ajax_nopriv_service_lake_fetch_time_slots', 'service_lake_fetch_time_slots');
+
+add_action('gform_after_submission_5', 'service_lake_save_booking_after_submission', 10, 2);
+function service_lake_save_booking_after_submission($entry, $form) {
+    $user_name = rgar($entry, '60');
+    $user_email = rgar($entry, '16');
+    $boat_id = rgar($entry, '57');
+    $time_duration = get_the_title($boat_id);
+    $booking_date = rgar($entry, '50');
+    $time_slot = rgar($entry, '54');
+
+    if (empty($boat_id) || empty($booking_date) || empty($time_slot)) {
+        return;
+    }
+
+    $existing_booking = new WP_Query(array(
+        'post_type' => 'service-lake-booking',
+        'meta_query' => array(
+            array('key' => 'boat_id', 'value' => $boat_id, 'compare' => '='),
+            array('key' => 'time_duration', 'value' => $time_duration, 'compare' => '='),
+            array('key' => 'client_name', 'value' => $user_name, 'compare' => '='),
+            array('key' => 'booking_email', 'value' => $user_email, 'compare' => '='),
+            array('key' => 'booking_date', 'value' => $booking_date, 'compare' => '='),
+            array('key' => 'time_slot', 'value' => $time_slot, 'compare' => '='),
+            array('key' => 'booking_status', 'value' => 'confirmed', 'compare' => '='), 
+        ),
+    ));
+    
+    if ($existing_booking->have_posts()) {
+        return;
+    }
+
+    $booking_post = array(
+        'post_title'   => "Booking: {$user_name} - Boat {$boat_id} on {$booking_date} at {$time_slot}",
+        'post_type'    => 'service-lake-booking',
+        'post_status'  => 'publish',
+    );
+    $booking_id = wp_insert_post($booking_post);
+    
+    if (!$booking_id) {
+        return;
+    }
+    
+    update_field('boat_id', $boat_id, $booking_id);
+    update_field('time_duration', $time_duration, $booking_id);
+    update_field('client_name',  $user_name, $booking_id);
+    update_field('booking_email', $user_email, $booking_id);
+    update_field('booking_date', $booking_date, $booking_id);
+    update_field('time_slot', $time_slot, $booking_id);
+    update_field('booking_status', 'pending', $booking_id);
+}
+
+add_filter('gform_confirmation_5', 'service_lake_custom_confirmation_alert', 10, 4);
+function service_lake_custom_confirmation_alert($confirmation, $form, $entry, $is_ajax) {
+    if (is_string($confirmation)) {
+        $script = "<script>alert('Thank you! Your booking has been processed.');</script>";
+        $confirmation .= $script;
+    }
+    return $confirmation;
+}
+
+add_filter('gform_field_value_service_lake_price', 'service_lake_populate_hourly_rental_price', 10, 3);
+function service_lake_populate_hourly_rental_price($value, $field, $name) {
+    $boat_id = isset($_GET['boat_id']) ? intval($_GET['boat_id']) : 0;
+    error_log("Boat ID from URL: $boat_id");
+
+    if ($boat_id > 0 && get_post_type($boat_id) === 'service-lake') {
+        $service_lake_rental_price = get_field('service_lake_price', $boat_id);
+        error_log("Hourly Rental Price for Boat ID $boat_id: $service_lake_rental_price");
+
+        if ($service_lake_rental_price) {
+            return number_format((float)$service_lake_rental_price, 2, '.', '');
+        }
+    }
+
+    error_log("Invalid Boat ID or post type is not 'Service Lake'. Returning empty value.");
+    return '';
+}
+
+add_filter('gform_field_value_boat_name', 'service_lake_populate_boat_name', 10, 3);
+function service_lake_populate_boat_name($value, $field, $name) {
+    $boat_id = isset($_GET['boat_id']) ? intval($_GET['boat_id']) : 0;
+    error_log("Boat ID from URL: $boat_id");
+
+    if ($boat_id > 0 && get_post_type($boat_id) === 'service-lake') {
+        $boat_name = get_field('boat_name', $boat_id);
+        error_log("Boat Name for Boat ID $boat_id: $boat_name");
+        return $boat_name;
+    }
+
+    error_log("Invalid Boat ID or post type is not 'service-lake'. Returning empty value.");
+    return '';
+}
+
+function service_lake_booking_calendar_shortcode() {
+    $boat_id = get_the_ID();
+    $boat_price = get_field('service_lake_price', $boat_id);
+    
+    ob_start();
+    ?>
+    <div class="brf-post-item">
+        <h3><?php the_title(); ?></h3>
+        <h3>Rental Price: $<?php echo esc_html($boat_price); ?></h3>
+    </div>
+    <div id="sl-booking-calendar" style="width: 60%; float: left; min-height: 400px;"></div>
+<div id="sl-time-slots-section" style="width: 35%; float: right; margin-left: 5%;">
+    <h3 id="sl-selected-date-title">Selected Date:</h3>
+    <div id="sl-dynamic-time-slots-container">
+        <p>Please select a date to see available time slots.</p>
+        <ul id="sl-time-slot-list"></ul>
+    </div>
+    <button id="sl-book-now-btn" disabled>Book Now</button>
+    <button id="sl-check-availability-btn">Check Next Availability</button>
+    <input type="hidden" id="sl-boat-id" value="<?php echo esc_attr($boat_id); ?>">
+    <input type="hidden" id="sl-selected-time" value="">
+</div>
+    <div style="clear: both;"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("time-slot-list").innerHTML = ""; // Clear time slots on load
+        });
+    </script>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode('service_lake_booking_calendar', 'service_lake_booking_calendar_shortcode');
+
+function service_lake_enqueue_scripts() {
+    wp_enqueue_script('jquery');
+    wp_localize_script('jquery', 'boatRentalAjax', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+    ));
+}
+add_action('wp_enqueue_scripts', 'service_lake_enqueue_scripts');
+
+function service_lake_fetch_filtered_posts() {
+    $tag = sanitize_text_field($_POST['tag']);
+
+    $args = array(
+        'post_type' => 'service-lake',
+        'posts_per_page' => -1,
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'post_tag',
+                'field' => 'slug',
+                'terms' => $tag,
+            ),
+        ),
+    );
+
+    $query = new WP_Query($args);
+
+    if ($query->have_posts()) {
+        ob_start();
+        while ($query->have_posts()) {
+            $query->the_post();
+            ?>
+            <div class="post-item">
+                <h2><?php the_title(); ?></h2>
+                <div><?php the_content(); ?></div>
+                <?php echo do_shortcode('[service_lake_booking_calendar]'); ?>
+            </div>
+            <?php
+        }
+        wp_reset_postdata();
+        $output = ob_get_clean();
+        wp_send_json_success($output);
+    } else {
+        ob_start();
+        ?>
+        <div class="post-item">
+            <p>No posts found for the selected tag.</p>
+        </div>
+        <?php
+        $output = ob_get_clean();
+        wp_send_json_success($output);
+    }
+}
+add_action('wp_ajax_service_lake_fetch_filtered_posts', 'service_lake_fetch_filtered_posts');
+add_action('wp_ajax_nopriv_service_lake_fetch_filtered_posts', 'service_lake_fetch_filtered_posts');
+
+function service_lake_filter_shortcode() {
+    $page_id = get_the_ID();
+    $with_captain_tag = get_field('with_captain', $page_id);
+    $without_captain_tag = get_field('without_captain', $page_id);
+
+    ob_start();
+    ?>
+    <div id="filter-buttons">
+        <button id="with-captain-btn" class="active" data-tag="<?php echo esc_attr($with_captain_tag); ?>">With Captain</button>
+        <button id="without-captain-btn" data-tag="<?php echo esc_attr($without_captain_tag); ?>">Without Captain</button>
+    </div>
+    <div id="post-results">
+        <!-- Related posts will be displayed here -->
+    </div>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode('service_lake_filter', 'service_lake_filter_shortcode');
+
+// Fishing Charter Booking Approval From Backend
+/**
+ * Add custom columns for booking status and actions.
+ */
+function service_lake_add_booking_columns($columns) {
+    $columns['booking_status'] = 'Status';
+    $columns['booking_actions'] = 'Actions';
+    return $columns;
+}
+add_filter('manage_service-lake-booking_posts_columns', 'service_lake_add_booking_columns');
+
+/**
+ * Populate the custom columns with status and action buttons.
+ */
+function service_lake_render_booking_columns($column, $post_id) {
+    if ($column === 'booking_status') {
+        $status = get_field('booking_status', $post_id);
+        echo ucfirst($status); // Show status
+    }
+    
+    if ($column === 'booking_actions') {
+        $approve_url = admin_url("admin-post.php?action=service_lake_approve_booking&booking_id={$post_id}&_wpnonce=" . wp_create_nonce('service_lake_approve_booking_' . $post_id));
+        $cancel_url = admin_url("admin-post.php?action=service_lake_cancel_booking&booking_id={$post_id}&_wpnonce=" . wp_create_nonce('service_lake_cancel_booking_' . $post_id));
+
+        echo '<a href="' . esc_url($approve_url) . '" class="button button-primary" style="margin-right:5px;">Approve</a>';
+        echo '<a href="' . esc_url($cancel_url) . '" class="button" style="background-color:#dc3232;color:#fff;">Cancel</a>';
+    }
+}
+add_action('manage_service-lake-booking_posts_custom_column', 'service_lake_render_booking_columns', 10, 2);
+
+/**
+ * Handle Approve Action.
+ */
+function service_lake_handle_approve_booking() {
+    if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'service_lake_approve_booking_' . $_GET['booking_id'])) {
+        wp_die('Security check failed.');
+    }
+
+    $booking_id = intval($_GET['booking_id']);
+    
+    // Update booking status to confirmed.
+    update_field('booking_status', 'confirmed', $booking_id);
+
+    // Redirect back to the bookings list.
+    wp_redirect(admin_url('edit.php?post_type=service-lake-booking'));
+    exit;
+}
+add_action('admin_post_service_lake_approve_booking', 'service_lake_handle_approve_booking');
+
+/**
+ * Handle Cancel Action.
+ */
+function service_lake_handle_cancel_booking() {
+    if (!isset($_GET['_wpnonce']) || !wp_verify_nonce($_GET['_wpnonce'], 'service_lake_cancel_booking_' . $_GET['booking_id'])) {
+        wp_die('Security check failed.');
+    }
+
+    $booking_id = intval($_GET['booking_id']);
+    update_field('booking_status', 'rejected', $booking_id);
+
+    // Redirect back to the bookings list.
+    wp_redirect(admin_url('edit.php?post_type=service-lake-booking'));
+    exit;
+}
+add_action('admin_post_service_lake_cancel_booking', 'service_lake_handle_cancel_booking');
