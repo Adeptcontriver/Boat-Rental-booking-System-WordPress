@@ -1691,4 +1691,26 @@ function service_lake_handle_cancel_booking() {
     wp_redirect(admin_url('edit.php?post_type=service-lake-booking'));
     exit;
 }
+<<<<<<< Updated upstream
 add_action('admin_post_service_lake_cancel_booking', 'service_lake_handle_cancel_booking');
+=======
+add_action('admin_post_service_lake_cancel_booking', 'service_lake_handle_cancel_booking');
+
+
+
+
+// Category fetched in the gform
+
+
+add_filter('gform_field_value_boat_category', function($value) {
+    if (isset($_GET['boat_id'])) {
+        $boat_id = intval($_GET['boat_id']); // Get boat ID from URL
+        $categories = wp_get_post_terms($boat_id, 'category'); // Fetch categories
+
+        if (!empty($categories) && !is_wp_error($categories)) {
+            return $categories[0]->slug; // Return category slug (with-captain or without-captain)
+        }
+    }
+    return '';
+});
+>>>>>>> Stashed changes
