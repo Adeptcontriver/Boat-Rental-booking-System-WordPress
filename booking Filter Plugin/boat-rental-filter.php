@@ -3,7 +3,7 @@
 Plugin Name: Boat Rental Filter Plugin
 Description: A plugin to handle boat rental filtering based on ACF fields.
 Version: 1.0
-Author: Savvy Programmers
+Author: Shahid Kamal
 */
 
 // Exit if accessed directly
