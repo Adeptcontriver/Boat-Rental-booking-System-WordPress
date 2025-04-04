@@ -711,9 +711,12 @@ add_action('wp_footer', 'enqueue_booking_search_script');
 
 // Drop Off Rental:
 function drop_off_rental_fetch_time_slots() {
+    
     $selectedDate = sanitize_text_field($_POST['date']);
     $boat_id = intval($_POST['boat_id']);
     $time_slots = array();
+    // echo 'selectedDate: ' . $selectedDate;
+    // die;
 
     error_log("Fetching time slots for date: $selectedDate and boat ID: $boat_id");
 
@@ -724,14 +727,50 @@ function drop_off_rental_fetch_time_slots() {
 
             error_log("Checking time slot: $time_slot");
 
+            // $booking_query = new WP_Query
+            // (array(
+            //     'post_type' => 'drop-off-rental-book',
+            //     'meta_query' => array(
+            //         array('key' => 'boat_id', 'value' => $boat_id, 'compare' => '='),
+            //         array('key' => 'booking_date', 'value' => $selectedDate, 'compare' => '='),
+            //         array('key' => 'time_slot', 'value' => $time_slot, 'compare' => '='),
+            //         array('key' => 'booking_status', 'value' => 'confirmed', 'compare' => '=')
+            //     ),
+            // ));
+
             $booking_query = new WP_Query(array(
-                'post_type' => 'drop-off-rental-book',
+                'post_type'  => 'drop-off-rental-book',
                 'meta_query' => array(
-                    array('key' => 'boat_id', 'value' => $boat_id, 'compare' => '='),
-                    array('key' => 'booking_date', 'value' => $selectedDate, 'compare' => '='),
-                    array('key' => 'time_slot', 'value' => $time_slot, 'compare' => '='),
-                    array('key' => 'booking_status', 'value' => 'confirmed', 'compare' => '=')
-                ),
+                
+                    array(
+                        'relation' => 'AND', // Ensures selectedDate is NOT between booking_date and booking_end_date
+                        array(
+                            'key'     => 'booking_date',
+                            'value'   => $selectedDate,
+                            'compare' => '<=' // Selected date should NOT be greater than booking_date
+                        ),
+                        array(
+                            'key'     => 'booking_end_date',
+                            'value'   => $selectedDate,
+                            'compare' => '>=' // Selected date should NOT be less than booking_end_date
+                        )
+                    ),
+                    array(
+                        'key'     => 'boat_id',
+                        'value'   => $boat_id,
+                        'compare' => '='
+                    ),
+                    array(
+                        'key'     => 'time_slot',
+                        'value'   => $time_slot,
+                        'compare' => '='
+                    ),
+                    array(
+                        'key'     => 'booking_status',
+                        'value'   => 'confirmed',
+                        'compare' => '='
+                    )
+                )
             ));
 
             error_log("Query results for time slot $time_slot: " . print_r($booking_query->posts, true));
@@ -760,16 +799,38 @@ add_action('wp_ajax_drop_off_rental_fetch_time_slots', 'drop_off_rental_fetch_ti
 add_action('wp_ajax_nopriv_drop_off_rental_fetch_time_slots', 'drop_off_rental_fetch_time_slots');
 add_action('wp_ajax_nopriv_dropp_off_rental_fetch_time_slots', 'dropp_off_rental_fetch_time_slots');
 
+
+
+// Payment Authorization i
+add_filter( 'gform_ppcp_authorization_only', '__return_true' );
+add_filter( 'gform_stripe_payment_element_authorization_only', '__return_true');
 add_action('gform_after_submission_3', 'dropp_off_rental_save_booking_after_submission', 10, 2);
 function dropp_off_rental_save_booking_after_submission($entry, $form) {
     $user_name = rgar($entry, '60');
     $user_email = rgar($entry, '16');
     $boat_id = rgar($entry, '57');
     $time_duration = get_the_title($boat_id);
-    $booking_date = rgar($entry, '50');
+    $booking_date_actual = rgar($entry, '50');
     $time_slot = rgar($entry, '54');
+    $days = rgar($entry, '78');
+    $entry_id = $entry['id'];
 
-    if (empty($boat_id) || empty($booking_date) || empty($time_slot)) {
+    // Create a DateTime object using the correct format (Y-m-d)
+$date = DateTime::createFromFormat('Y-m-d', $booking_date_actual);
+
+if ($date) {
+    // Add the specified days
+    $date->modify('+' . (int)$days . ' days');
+
+    // Format and output the modified date    
+    $booking_end_date = $date->format('Y-m-d');  
+
+    error_log('Booking Start Date: ' . $booking_date_actual);
+    error_log('Days to Add: ' . $days);
+    error_log('Booking End Date: ' . $booking_end_date);
+}
+
+    if (empty($boat_id) || empty($booking_date_actual) || empty($time_slot)) {
         return;
     }
 
@@ -780,7 +841,7 @@ function dropp_off_rental_save_booking_after_submission($entry, $form) {
             array('key' => 'time_duration', 'value' => $time_duration, 'compare' => '='),
             array('key' => 'client_name', 'value' => $user_name, 'compare' => '='),
             array('key' => 'booking_email', 'value' => $user_email, 'compare' => '='),
-            array('key' => 'booking_date', 'value' => $booking_date, 'compare' => '='),
+            array('key' => 'booking_date', 'value' => $booking_date_actual, 'compare' => '='),
             array('key' => 'time_slot', 'value' => $time_slot, 'compare' => '='),
             array('key' => 'booking_status', 'value' => 'confirmed', 'compare' => '='), 
         ),
@@ -791,7 +852,7 @@ function dropp_off_rental_save_booking_after_submission($entry, $form) {
     }
 
     $booking_post = array(
-        'post_title'   => "Booking: {$user_name} - Boat {$boat_id} on {$booking_date} at {$time_slot}",
+        'post_title'   => "Booking: {$user_name} - Boat {$boat_id} on {$booking_date_actual} at {$time_slot}",
         'post_type'    => 'drop-off-rental-book',
         'post_status'  => 'publish',
     );
@@ -805,9 +866,11 @@ function dropp_off_rental_save_booking_after_submission($entry, $form) {
     update_field('time_duration', $time_duration, $booking_id);
     update_field('client_name',  $user_name, $booking_id);
     update_field('booking_email', $user_email, $booking_id);
-    update_field('booking_date', $booking_date, $booking_id);
+    update_field('booking_date', $booking_date_actual, $booking_id);
+    update_field('booking_end_date', $booking_end_date, $booking_id);
     update_field('time_slot', $time_slot, $booking_id);
     update_field('booking_status', 'pending', $booking_id);
+    update_field('entry_id', $entry_id, $booking_id);
 }
 
 add_filter('gform_confirmation_3', 'dropp_off_rental_custom_confirmation_alert', 10, 4);
@@ -963,6 +1026,88 @@ add_shortcode('dropp_off_rental_filter', 'dropp_off_rental_filter_shortcode');
 
 // Drop Off Booking Approval From Backend
 
+// Automatically update booking_status to "confirmed" when payment is completed
+add_action('gform_post_payment_action', 'auto_confirm_booking_on_payment', 10, 2);
+function auto_confirm_booking_on_payment($entry, $action) {
+    if ($action['type'] === 'complete_payment') {
+        $entry_id = $entry['id'];
+
+        $args = array(
+            'post_type'      => 'drop-off-rental-book',
+            'posts_per_page' => 1,
+            'meta_query'     => array(
+                array(
+                    'key'     => 'entry_id',
+                    'value'   => strval($entry_id),
+                    'compare' => '=',
+                ),
+            ),
+        );
+
+        $query = new WP_Query($args);
+
+        if ($query->have_posts()) {
+            $booking_post_id = $query->posts[0]->ID;
+
+            // Only update if not already confirmed
+            $current_status = get_field('booking_status', $booking_post_id);
+            if ($current_status !== 'confirmed') {
+                update_field('booking_status', 'confirmed', $booking_post_id);
+            }
+        }
+    }
+}
+// Debug helper for admin to verify entry and booking status
+add_action('admin_init', function () {
+    if (
+        isset($_GET['page']) &&
+        $_GET['page'] === 'gf_entries' &&
+        isset($_GET['lid']) // ✅ Entry ID
+    ) {
+        $gravity_entry_id = intval($_GET['lid']);
+        $entry = GFAPI::get_entry($gravity_entry_id);
+        $payment_status = rgar($entry, 'payment_status');
+
+        echo '<div style="padding-left:200px; padding-top:20px; font-family:monospace;">';
+        echo '<h2>Gravity Entry Debug Info</h2>';
+        echo '<p><strong>Gravity Forms Entry ID:</strong> ' . esc_html($gravity_entry_id) . '</p>';
+        echo '<p><strong>Payment Status:</strong> ' . esc_html($payment_status) . '</p>';
+
+        $args = array(
+            'post_type'      => 'drop-off-rental-book',
+            'posts_per_page' => 1,
+            'meta_query'     => array(
+                array(
+                    'key'     => 'entry_id',
+                    'value'   => strval($gravity_entry_id),
+                    'compare' => '=',
+                ),
+            ),
+        );
+
+        $query = new WP_Query($args);
+
+        if ($query->have_posts()) {
+            $booking_post_id = $query->posts[0]->ID;
+            $booking_status = get_field('booking_status', $booking_post_id);
+            $booking_entry_id = get_field('entry_id', $booking_post_id); // ✅ ACF field value
+
+            echo '<p><strong>Booking Post ID:</strong> ' . esc_html($booking_post_id) . '</p>';
+            echo '<p><strong>Booking ACF Entry ID (entry_id):</strong> ' . esc_html($booking_entry_id) . '</p>';
+            echo '<p><strong>Booking Status:</strong> ' . esc_html($booking_status) . '</p>';
+
+            if ($payment_status === 'Paid' && $booking_status !== 'confirmed') {
+                update_field('booking_status', 'confirmed', $booking_post_id);
+                echo '<p style="color:green;"><strong>✅ Booking status updated to: Confirmed</strong></p>';
+            }
+        } else {
+            echo '<p style="color:red;"><strong>❌ No booking found for Entry ID: ' . $gravity_entry_id . '</strong></p>';
+        }
+
+        echo '</div>';
+    }
+});
+
 
 /**
  * Add custom columns for booking status and actions.
@@ -974,25 +1119,32 @@ function dropp_off_rental_add_booking_columns($columns) {
 }
 add_filter('manage_drop-off-rental-book_posts_columns', 'dropp_off_rental_add_booking_columns');
 
-/**
- * Populate the custom columns with status and action buttons.
- */
 function dropp_off_rental_render_booking_columns($column, $post_id) {
     if ($column === 'booking_status') {
         $status = get_field('booking_status', $post_id);
-        echo ucfirst($status); // Show status
+        echo ucfirst($status);
     }
-    
-    if ($column === 'booking_actions') {
-        $approve_url = admin_url("admin-post.php?action=dropp_off_rental_approve_booking&booking_id={$post_id}&_wpnonce=" . wp_create_nonce('dropp_off_rental_approve_booking_' . $post_id));
-        $cancel_url = admin_url("admin-post.php?action=dropp_off_rental_cancel_booking&booking_id={$post_id}&_wpnonce=" . wp_create_nonce('dropp_off_rental_cancel_booking_' . $post_id));
 
-        echo '<a href="' . esc_url($approve_url) . '" class="button button-primary" style="margin-right:5px;">Approve</a>';
-        echo '<a href="' . esc_url($cancel_url) . '" class="button" style="background-color:#dc3232;color:#fff;">Cancel</a>';
+    if ($column === 'booking_actions') {
+        // $approve_url = admin_url("admin-post.php?action=dropp_off_rental_approve_booking&booking_id={$post_id}&_wpnonce=" . wp_create_nonce('dropp_off_rental_approve_booking_' . $post_id));
+        $cancel_url = admin_url("admin-post.php?action=dropp_off_rental_cancel_booking&booking_id={$post_id}&_wpnonce=" . wp_create_nonce('dropp_off_rental_cancel_booking_' . $post_id));
+        
+        // 🔄 Get the entry_id from ACF
+        $entry_id = get_field('entry_id', $post_id);
+        $form_id = 3; // Set your form ID here
+        $entry_url = $entry_id ? admin_url("admin.php?page=gf_entries&view=entry&id={$form_id}&lid={$entry_id}") : '';
+
+       
+        if ($entry_id) {
+            echo '<a href="' . esc_url($entry_url) . '" class="button" style="background-color:#21759b; color:#fff;" target="_blank">View Entry</a>';
+        }
+         // 🎯 Output buttons
+        //  echo '<a href="' . esc_url($approve_url) . '" class="button button-primary" style="margin-right:5px;">Approve</a>';
+         echo '<a href="' . esc_url($cancel_url) . '" class="button" style="background-color:#dc3232;color:#fff;margin-right:5px;">Cancel</a>';
+ 
     }
 }
 add_action('manage_drop-off-rental-book_posts_custom_column', 'dropp_off_rental_render_booking_columns', 10, 2);
-
 /**
  * Handle Approve Action.
  */
@@ -1030,9 +1182,7 @@ function dropp_off_rental_handle_cancel_booking() {
 add_action('admin_post_dropp_off_rental_cancel_booking', 'dropp_off_rental_handle_cancel_booking');
 
 
-
-
-
+// Damage Drop Off rental
 
 
 
@@ -1185,6 +1335,7 @@ function fishing_charter_populate_boat_name($value, $field, $name) {
 function fishing_charter_booking_calendar_shortcode() {
     $boat_id = get_the_ID();
     $boat_price = get_field('fishing_charter_price', $boat_id);
+    $fishing_description = get_field('fishing_charter_100_word_text', $boat_id);
     
     ob_start();
     ?>
@@ -1203,6 +1354,11 @@ function fishing_charter_booking_calendar_shortcode() {
     <button id="fc-check-availability-btn">Check Next Availability</button>
     <input type="hidden" id="fc-boat-id" value="<?php echo esc_attr($boat_id); ?>">
     <input type="hidden" id="fc-selected-time" value="">
+    <?php if (!empty($fishing_description)) : ?>
+    <div class="fishing-description">
+        <p><?php echo esc_html($fishing_description); ?></p>
+    </div>
+<?php endif; ?>
 </div>
     <div style="clear: both;"></div>
     <script>
@@ -1711,3 +1867,110 @@ add_filter('gform_field_value_boat_category', function($value) {
     return '';
 });
 
+add_filter('gform_field_value_boat_title', function($value) {
+    if (isset($_GET['boat_id'])) {
+        $boat_id = intval($_GET['boat_id']); // Get boat ID from URL
+        $post_title = get_the_title($boat_id); // Get the post title
+
+        if (!empty($post_title)) {
+            return $post_title; // Return the boat title
+        }
+    }
+    return '';
+});
+
+
+function content_condition_shortcode() {
+    $content_type = get_field('content_type'); // Get the selected radio button value
+
+    if ($content_type == 'calender_content') {
+        return do_shortcode('[fishing_charter_booking_calendar]'); // Show Calendar
+    } elseif ($content_type == 'call_availability_content') {
+        $post_title = get_the_title(); // Get the post title
+        $call_content = get_field('call_for_availability_content'); 
+        $call_other_content = get_field('fishing_charter_service'); // Get ACF content
+        
+        return '<div class="call-availability">
+                    <h2>' . esc_html($call_other_content) . '</h2>    
+                    <p>' . esc_html($call_content) . '</p>
+                </div>';
+    }
+}
+add_shortcode('content_condition', 'content_condition_shortcode');
+
+add_filter('gform_field_value_booking_days', function($value) {
+    if (isset($_GET['boat_id'])) {
+        $boat_id = intval($_GET['boat_id']); // Get boat ID from URL
+        $booking_days = get_field('booking_days', $boat_id); // Fetch booking days ACF field
+
+        if (!empty($booking_days)) {
+            return $booking_days; // Return the value
+        }
+    }
+    return ''; // Default empty value if no data found
+});
+
+
+function service_content_condition_shortcode() {
+    $content_type = get_field('content_type'); // Get the selected ACF field value
+
+    if ($content_type == 'services-lake-calender') {
+        return do_shortcode('[service_lake_booking_calendar]'); // Show Calendar
+    } elseif ($content_type == 'service_lakes_content') {
+        return get_field('service_lakes_content'); // Show the selected content from ACF
+    }
+
+    return ''; // Return nothing if no condition matches
+}
+add_shortcode('service_content_condition', 'service_content_condition_shortcode');
+
+
+
+
+
+// Coupon Code
+add_action('wp_ajax_gf_process_coupon', 'gf_handle_coupon');
+add_action('wp_ajax_nopriv_gf_process_coupon', 'gf_handle_coupon');
+function gf_handle_coupon() {
+    try {
+        // Verify nonce (uncomment when ready)
+        // check_ajax_referer('gf_coupon_nonce', 'security');
+        
+        // Validate input
+        if (empty($_POST['coupon'])) {
+            wp_send_json_error([
+                'message' => 'Please enter a coupon code'
+            ], 400);
+            return;
+        }
+        
+        $coupon_code = sanitize_text_field($_POST['coupon']);
+        $coupons = get_field('coupon_codes', 'option') ?: [];
+        
+        foreach ($coupons as $coupon) {
+            if (!empty($coupon['codes']) && 
+                strcasecmp(trim($coupon['codes']), trim($coupon_code)) === 0) {
+                
+                // Validate percentage value
+                $percentage = is_numeric($coupon['percentage'] ?? null) 
+                    ? (float)$coupon['percentage'] 
+                    : 0;
+                
+                wp_send_json_success([
+                    'percentage' => $percentage,
+                    'message' => $percentage ? sprintf('%d%% discount applied', $percentage) : 'Coupon has no discount'
+                ]);
+                return;
+            }
+        }
+        
+        wp_send_json_error([
+            'message' => 'Invalid coupon code'
+        ], 404);
+        
+    } catch (Exception $e) {
+        wp_send_json_error([
+            'message' => 'Server error: ' . $e->getMessage()
+        ], 500);
+    }
+}
