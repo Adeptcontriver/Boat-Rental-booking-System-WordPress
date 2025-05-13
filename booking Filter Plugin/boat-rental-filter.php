@@ -236,6 +236,7 @@ function brf_plugin_fetch_time_slots() {
                 ]);
                 $booked_count += $dropoff_booking_query->found_posts;
                 $booked_count2 += $dropoff_booking_query->found_posts;
+
             }
 
                 $configured_quantity = intval(get_sub_field('boats_available'));
@@ -270,7 +271,7 @@ function brf_plugin_fetch_time_slots() {
         'hourly_boat_rental_id' => $boat_id,
         'interlinked_boat_id' => $interlinked_boat_id,
         'drop_off_rental_id' => $dropoff_rental_id, // Drop-off rental ID (may be null if not found)
-        // 'boats_available_in_hourly_boat_rental' => $boat_quantity - $booked_count,
+        'boats_available_in_hourly_boat_rental' => $boat_quantity - $booked_count,
         'boats_available_in_hourly_boat_rental' => $boat_quantity,
         'boats_available_in_drop_off_rental' => $dropoff_boats_available,
         'slots' => $time_slots,
