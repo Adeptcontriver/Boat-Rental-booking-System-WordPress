@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize FullCalendar
     let calendar; // Declare calendar variable globally
+    let currentSelectedDate = new Date('2025-05-16').toISOString().split('T')[0];// Track the currently selected date
 
     function initializeCalendar() {
         var calendarEl = document.getElementById('booking-calendar');
@@ -10,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log("DEBUG: Calendar element found");
 
             // Get today's date in YYYY-MM-DD format
-            const today = new Date().toISOString().split('T')[0];
+            const today = new Date('2025-05-16').toISOString().split('T')[0];
 
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log("DEBUG: Selected date:", selectedDate);
                     updateSelectedDateTitle(selectedDate);
                     fetchTimeSlots(selectedDate);
+                    currentSelectedDate = selectedDate; // Update the currently selected date
                 }
             });
 
@@ -138,19 +140,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (response.success) {
                     const slots = response.data.slots;
                     let slotsHtml = '';
-
+            
                     if (slots.length > 0) {
                         slots.forEach(slot => {
+                            const boatsAvailable = slot.boats_available !== null ? slot.boats_available : 0;
+                    
                             if (slot.available) {
                                 slotsHtml += `
                                     <button class="time-slot" data-time="${slot.time}">
-                                        ${slot.time}
+                                        ${slot.time} - Boats Available: ${boatsAvailable}
                                     </button>
                                 `;
                             } else {
                                 slotsHtml += `
                                     <button class="time-slot unavailable" data-time="${slot.time}" disabled>
-                                        ${slot.time} (Booked)
+                                        ${slot.time} - Boats Available: ${boatsAvailable} (Booked)
                                     </button>
                                 `;
                             }
@@ -158,7 +162,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     } else {
                         slotsHtml = '<p>No slots available for ' + selectedDate + '</p>';
                     }
-
                     document.getElementById('dynamic-time-slots-container').innerHTML = slotsHtml;
 
                     // Add event listeners to time slot buttons
@@ -188,25 +191,88 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-            
-
-
     // Add event listener for the "Book Now" button
     document.getElementById('book-now-btn').addEventListener('click', function() {
         const selectedTime = document.getElementById('selected-time').value;
         const boatId = document.getElementById('boat-id').value;
         const dateTitle = document.getElementById('selected-date-title').textContent;
         const selectedDate = dateTitle.replace('Selected Date: ', '');
+        const boatHours = document.getElementById('booking-hours').value.trim();
+        
+        
 
         // Build query string
-        const query = `?boat_id=${encodeURIComponent(boatId)}&time_slot=${encodeURIComponent(selectedTime)}&date=${encodeURIComponent(selectedDate)}`;
+        const query = `?boat_id=${encodeURIComponent(boatId)}&time_slot=${encodeURIComponent(selectedTime)}&date=${encodeURIComponent(selectedDate)}&booking_hours=${encodeURIComponent(boatHours)}`;
 
         // Redirect to the form page
         window.location.href = '/boat-booking' + query;
     });
 
-    
+    // Add event listener for the "Check Availability" button
+    const checkAvailabilityBtn = document.getElementById('check-availability-btn'); // Unique ID
+    if (checkAvailabilityBtn) {
+        checkAvailabilityBtn.addEventListener('click', function () {
+            const selectedDate = document.getElementById('selected-date-title').textContent.replace('Selected Date: ', '');
+            checkNextAvailability(selectedDate);
+        });
+    }
+
+    // Function: Check Next Availability (increments date by one day)
+    function checkNextAvailability(currentDate) {
+        const dateObj = new Date(currentDate);
+        dateObj.setDate(dateObj.getDate() + 1);
+        const nextDate = dateObj.toISOString().split('T')[0];
+
+        if (nextDate === currentSelectedDate) {
+            console.log("Already displaying that date, skipping re-fetch.");
+            return;
+        }
+
+        currentSelectedDate = nextDate;
+        fetchTimeSlots(nextDate); // Fetch time slots for the next date
+        updateSelectedDateTitle(nextDate); // Update the selected date title
+        highlightSelectedDate(nextDate); // Highlight the next date in the calendar
+    }
+
+    // Function to highlight the selected date in the calendar
+    function highlightSelectedDate(date) {
+        if (calendar) {
+            calendar.gotoDate(date); // Navigate to the selected date
+        }
+    }
 });
+
+
+
+
+
+
+
+
+// 
+
+
+
+// 
+
+
+// document.getElementById('book-now-btn').addEventListener('click', function() {
+//     const selectedTime = document.getElementById('selected-time').value;
+//     const boatId = document.getElementById('boat-id').value;
+//     // The selected date might be stored in a hidden field or extracted from the text
+//     const dateTitle = document.getElementById('selected-date-title').textContent;
+//     const selectedDate = dateTitle.replace('Selected Date: ', '');
+//        const boatHours = document.getElementById('booking-hours').value.trim();
+  
+//     // Build query string
+//     const query = `?boat_id=${encodeURIComponent(boatId)}&time_slot=${encodeURIComponent(selectedTime)}&date=${encodeURIComponent(selectedDate)}&booking_hours=${encodeURIComponent(boatHours)}`;
+  
+//     // Redirect to the form page
+//     window.location.href = '/boat-booking' + query;
+//   });
+
+
+
 
 
 

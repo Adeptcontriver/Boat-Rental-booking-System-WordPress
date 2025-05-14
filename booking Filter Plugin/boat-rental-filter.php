@@ -157,10 +157,172 @@ add_action('wp_ajax_nopriv_brf_plugin_fetch_filtered_posts', 'brf_plugin_fetch_f
 // New funtionality
 
 
+
+
+// function brf_plugin_fetch_time_slots() {
+//     $selectedDate = sanitize_text_field($_POST['date']);
+//     $boat_id = intval($_POST['boat_id']);
+//     $time_slots = [];
+//     $booked_ranges = [];
+
+//     // Get interlinked boat from hourly boat rental
+//     $interlinked_boat = get_field('interlinked_boat', $boat_id);
+//     $interlinked_boat_id = is_object($interlinked_boat) ? $interlinked_boat->ID : $interlinked_boat;
+//     $is_interlinked = !empty($interlinked_boat_id);
+
+//     // Fetch Drop-Off Rental post with the same interlinked_boat_id
+//     $dropoff_rental = get_posts([
+//         'post_type' => 'drop-off-rental',
+//         'posts_per_page' => 1,
+//         'meta_query' => [
+//             [
+//                 'key' => 'interlinked_boat',
+//                 'value' => $interlinked_boat_id,
+//                 'compare' => '='
+//             ]
+//         ]
+//     ]);
+//     $dropoff_rental_id = !empty($dropoff_rental) ? $dropoff_rental[0]->ID : null;
+//     $dropoff_boats_available = 0;
+
+//     // Get drop-off rental time slots
+//     if ($dropoff_rental_id && have_rows('boat_time_slots', $dropoff_rental_id)) {
+//         while (have_rows('boat_time_slots', $dropoff_rental_id)) {
+//             the_row();
+//             $slot_time = get_sub_field('time_slot');
+//             $dropoff_boats_available = intval(get_sub_field('boats_available'));
+//         }
+//     }
+
+//     // Collect all bookings to determine booked time ranges
+//     $booked_time_ranges = [];
+//     $boat_hours = intval(get_field('booking_hours', $boat_id)) ?: 2; // Default to 2 hours if not set
+
+//     // Query hourly rental bookings
+//     $booking_query = new WP_Query([
+//         'post_type' => 'booking',
+//         'posts_per_page' => -1,
+//         'meta_query' => [
+//             ['key' => 'boat_id', 'value' => $boat_id, 'compare' => '='],
+//             ['key' => 'booking_date', 'value' => $selectedDate, 'compare' => '='],
+//             ['key' => 'booking_status', 'value' => 'confirmed', 'compare' => '='],
+//         ]
+//     ]);
+
+//     while ($booking_query->have_posts()) {
+//         $booking_query->the_post();
+//         $time_slot = get_post_meta(get_the_ID(), 'time_slot', true);
+//         $booking_duration = $boat_hours;
+//         $start_time = strtotime($time_slot);
+//         $end_time = strtotime("+$booking_duration hours", $start_time);
+//         $booked_time_ranges[] = [
+//             'start' => $time_slot,
+//             'start_time' => date('Y-m-d H:i:s', $start_time),
+//             'end_time' => date('Y-m-d H:i:s', $end_time),
+//             'type' => 'hourly'
+//         ];
+//     }
+//     wp_reset_postdata();
+
+//     // Query drop-off bookings
+//     if ($dropoff_rental_id) {
+//         $dropoff_booking_query = new WP_Query([
+//             'post_type' => 'drop-off-rental-book',
+//             'posts_per_page' => -1,
+//             'meta_query' => [
+//                 ['key' => 'interlinked_boat', 'value' => $interlinked_boat_id, 'compare' => '='],
+//                 ['key' => 'booking_date', 'value' => $selectedDate, 'compare' => '<=', 'type' => 'DATE'],
+//                 ['key' => 'booking_end_date', 'value' => $selectedDate, 'compare' => '>=', 'type' => 'DATE'],
+//                 ['key' => 'booking_status', 'value' => 'confirmed', 'compare' => '='],
+//             ]
+//         ]);
+
+//         while ($dropoff_booking_query->have_posts()) {
+//             $dropoff_booking_query->the_post();
+//             $time_slot = get_post_meta(get_the_ID(), 'time_slot', true);
+//             $booking_duration = $boat_hours;
+//             $start_time = strtotime($time_slot);
+//             $end_time = strtotime("+$booking_duration hours", $start_time);
+//             $booked_time_ranges[] = [
+//                 'start' => $time_slot,
+//                 'start_time' => date('Y-m-d H:i:s', $start_time),
+//                 'end_time' => date('Y-m-d H:i:s', $end_time),
+//                 'type' => 'dropoff'
+//             ];
+//         }
+//         wp_reset_postdata();
+//     }
+
+//     // Process time slots
+//     if (have_rows('boat_time_slots', $boat_id)) {
+//         while (have_rows('boat_time_slots', $boat_id)) {
+//             the_row();
+//             $time_slot = get_sub_field('time_slot');
+//             $configured_quantity = intval(get_sub_field('boats_available'));
+//             $is_available = true;
+//             $booked_count1 = 0; // Hourly bookings
+//             $booked_count2 = 0; // Drop-off bookings
+
+//             // Convert time slot to timestamp
+//             $slot_time = strtotime($time_slot);
+
+//             // Check if this time slot is within any booked range
+//             $booked_count = 0;
+//             foreach ($booked_time_ranges as $range) {
+//                 $range_start = strtotime($range['start_time']);
+//                 $range_end = strtotime($range['end_time']);
+//                 if ($slot_time >= $range_start && $slot_time < $range_end) {
+//                     $booked_count++;
+//                     if ($range['type'] === 'hourly') {
+//                         $booked_count1++;
+//                     } else {
+//                         $booked_count2++;
+//                     }
+//                 }
+//             }
+
+//             // Determine availability
+//             $boats_available = $configured_quantity - $booked_count;
+//             if ($boats_available <= 0 || $booked_count >= $configured_quantity) {
+//                 $is_available = false;
+//                 $boats_available = 0;
+//             }
+
+//             $time_slots[] = [
+//                 'time' => $time_slot,
+//                 'available' => $is_available,
+//                 'boat_quantity' => $configured_quantity,
+//                 'boats_available' => $boats_available,
+//                 'booking_hours' => $boat_hours,
+//                 'booked_count1' => $booked_count1,
+//                 'booked_count2' => $booked_count2,
+//                 'booked_ranges' => $booked_time_ranges
+//             ];
+//         }
+//     }
+
+//     // Return JSON response
+//     wp_send_json_success([
+//         'hourly_boat_rental_id' => $boat_id,
+//         'interlinked_boat_id' => $interlinked_boat_id,
+//         'drop_off_rental_id' => $dropoff_rental_id,
+//         'boats_available_in_hourly_boat_rental' => $configured_quantity,
+//         'boats_available_in_drop_off_rental' => $dropoff_boats_available,
+//         'slots' => $time_slots,
+//         'booked_count' => array_sum(array_column($time_slots, 'boats_available'))
+//     ]);
+// }
+// add_action('wp_ajax_brf_plugin_fetch_time_slots', 'brf_plugin_fetch_time_slots');
+// add_action('wp_ajax_nopriv_brf_plugin_fetch_time_slots', 'brf_plugin_fetch_time_slots');
+
+
+
+
 function brf_plugin_fetch_time_slots() {
     $selectedDate = sanitize_text_field($_POST['date']);
     $boat_id = intval($_POST['boat_id']);
     $time_slots = [];
+    $booked_ranges = [];
 
     // Get interlinked boat from hourly boat rental
     $interlinked_boat = get_field('interlinked_boat', $boat_id);
@@ -187,104 +349,202 @@ function brf_plugin_fetch_time_slots() {
         while (have_rows('boat_time_slots', $dropoff_rental_id)) {
             the_row();
             $slot_time = get_sub_field('time_slot');
-            $dropoff_boats_available = intval(get_sub_field('boats_available')); // Get the available boats for this time slot
+            $dropoff_boats_available = intval(get_sub_field('boats_available')) ?: 3; // Fallback for drop-off
         }
     }
 
-    // Hourly Boat Rental time slots
+    // Get boats available and booking hours from ACF fields
+    $boats_available = intval(get_field('boats_available', $boat_id)) ?: 3; // Use new field, fallback to 3
+    $boat_hours = intval(get_field('booking_hours', $boat_id)) ?: 2; // Default to 2 hours
+
+    // Collect all bookings to determine booked time ranges
+    $booked_time_ranges = [];
+
+    // Query hourly rental bookings
+    $booking_query = new WP_Query([
+        'post_type' => 'booking',
+        'posts_per_page' => -1,
+        'meta_query' => [
+            ['key' => 'boat_id', 'value' => $boat_id, 'compare' => '='],
+            ['key' => 'booking_date', 'value' => $selectedDate, 'compare' => '='],
+            ['key' => 'booking_status', 'value' => 'confirmed', 'compare' => '='],
+        ]
+    ]);
+
+    while ($booking_query->have_posts()) {
+        $booking_query->the_post();
+        $time_slot = get_post_meta(get_the_ID(), 'time_slot', true);
+        $booking_duration = $boat_hours;
+        $start_time = strtotime($time_slot);
+        $end_time = strtotime("+$booking_duration hours", $start_time);
+        $booked_time_ranges[] = [
+            'start' => $time_slot,
+            'start_time' => date('Y-m-d H:i:s', $start_time),
+            'end_time' => date('Y-m-d H:i:s', $end_time),
+            'type' => 'hourly'
+        ];
+    }
+    wp_reset_postdata();
+
+    // Query drop-off bookings
+    if ($dropoff_rental_id) {
+        $dropoff_booking_query = new WP_Query([
+            'post_type' => 'drop-off-rental-book',
+            'posts_per_page' => -1,
+            'meta_query' => [
+                ['key' => 'interlinked_boat', 'value' => $interlinked_boat_id, 'compare' => '='],
+                ['key' => 'booking_date', 'value' => $selectedDate, 'compare' => '<=', 'type' => 'DATE'],
+                ['key' => 'booking_end_date', 'value' => $selectedDate, 'compare' => '>=', 'type' => 'DATE'],
+                ['key' => 'booking_status', 'value' => 'confirmed', 'compare' => '='],
+            ]
+        ]);
+
+        while ($dropoff_booking_query->have_posts()) {
+            $dropoff_booking_query->the_post();
+            $time_slot = get_post_meta(get_the_ID(), 'time_slot', true);
+            $booking_duration = $boat_hours;
+            $start_time = strtotime($time_slot);
+            $end_time = strtotime("+$booking_duration hours", $start_time);
+            $booked_time_ranges[] = [
+                'start' => $time_slot,
+                'start_time' => date('Y-m-d H:i:s', $start_time),
+                'end_time' => date('Y-m-d H:i:s', $end_time),
+                'type' => 'dropoff'
+            ];
+        }
+        wp_reset_postdata();
+    }
+
+    // Process time slots
     if (have_rows('boat_time_slots', $boat_id)) {
         while (have_rows('boat_time_slots', $boat_id)) {
             the_row();
             $time_slot = get_sub_field('time_slot');
-            $configured_quantity = intval(get_sub_field('boats_available'));
-            $booking_hours = intval(get_field('booking_hours'));
-            $boat_hours = intval(get_field('booking_hours' , $boat_id));
-            $boat_quantity = $configured_quantity;
-            $is_available = true;
 
-            // Booking count from both booking types
-            $booked_count = 0;
-            $booked_count1 = 0;
-            $booked_count2 = 0;
+            // Use boats_available from the new field
+            $booked_count1 = 0; // Hourly bookings
+            $booked_count2 = 0; // Drop-off bookings
 
-            // Count hourly rental bookings
-            $booking_query = new WP_Query([
-                'post_type' => 'booking',
-                'posts_per_page' => -1,
-                'meta_query' => [
-                    ['key' => 'boat_id', 'value' => $boat_id, 'compare' => '='],
-                    ['key' => 'booking_date', 'value' => $selectedDate, 'compare' => '='],
-                    ['key' => 'time_slot', 'value' => $time_slot, 'compare' => '='],
-                    ['key' => 'booking_status', 'value' => 'confirmed', 'compare' => '='],
-                ]
-            ]);
-            $booked_count += $booking_query->found_posts;
-            $booked_count1 += $booking_query->found_posts;
-           
-            // Count drop-off bookings
-            if ($dropoff_rental_id) {
-                $dropoff_booking_query = new WP_Query([
-                    'post_type' => 'drop-off-rental-book',
-                    'posts_per_page' => -1,
-                    'meta_query' => [
-                        ['key' => 'interlinked_boat', 'value' => $interlinked_boat_id, 'compare' => '='],
-                        ['key' => 'booking_date', 'value' => $selectedDate, 'compare' => '<=', 'type' => 'DATE'],
-                        ['key' => 'booking_end_date', 'value' => $selectedDate, 'compare' => '>=', 'type' => 'DATE'],
-                        ['key' => 'time_slot', 'value' => $time_slot, 'compare' => '='],
-                        ['key' => 'booking_status', 'value' => 'confirmed', 'compare' => '='],
-                    ]
-                ]);
-                $booked_count += $dropoff_booking_query->found_posts;
-                $booked_count2 += $dropoff_booking_query->found_posts;
+            // Convert time slot to timestamp
+            $slot_time = strtotime($time_slot);
+            $slot_end_time = strtotime("+$boat_hours hours", $slot_time);
 
+            // Check availability for a new 2-hour booking starting at this slot
+            $is_available = false;
+            $boats_available_count = 0;
+
+            // Count boats booked for each 30-minute slot in the 2-hour window
+            $max_booked = 0;
+            for ($check_time = $slot_time; $check_time < $slot_end_time; $check_time += 1800) { // 1800 seconds = 30 minutes
+                $booked_in_slot = 0;
+                foreach ($booked_time_ranges as $range) {
+                    $range_start = strtotime($range['start_time']);
+                    $range_end = strtotime($range['end_time']);
+                    if ($check_time >= $range_start && $check_time < $range_end) {
+                        $booked_in_slot++;
+                        if ($range['type'] === 'hourly' && $check_time === $slot_time) {
+                            $booked_count1++;
+                        } elseif ($range['type'] === 'dropoff' && $check_time === $slot_time) {
+                            $booked_count2++;
+                        }
+                    }
+                }
+                $max_booked = max($max_booked, $booked_in_slot);
             }
 
-                $configured_quantity = intval(get_sub_field('boats_available'));
-                $booked_count = intval($booked_count); // Make sure it's an integer
-
-                if ($booked_count >= $configured_quantity) {
-                    $boats_available = 0;
-                    $is_available = false;
-                } else {
-                    $boats_available = $configured_quantity - $booked_count;
-                    $is_available = true;
-                }
-
-            // $boats_available = max($boat_quantity - $booked_count, 0);
-            //$boats_available = $boat_quantity;
-            if ($boats_available <= 0) $is_available = false;
+            // If max_booked < boats_available, at least one boat is available for the entire 2-hour period
+            $boats_available_count = $boats_available - $max_booked;
+            $is_available = $boats_available_count > 0;
 
             $time_slots[] = [
                 'time' => $time_slot,
                 'available' => $is_available,
-                'boat_quantity' => $configured_quantity, // Show full quantity
-                'boats_available' => $boats_available,
+                'boat_quantity' => $boats_available, // Use the new field
+                'boats_available' => $boats_available_count,
                 'booking_hours' => $boat_hours,
                 'booked_count1' => $booked_count1,
                 'booked_count2' => $booked_count2,
+                'booked_ranges' => $booked_time_ranges
             ];
         }
     }
 
-    // Return JSON response with both hourly boat rental and drop-off rental details
+    // Return JSON response
     wp_send_json_success([
         'hourly_boat_rental_id' => $boat_id,
         'interlinked_boat_id' => $interlinked_boat_id,
-        'drop_off_rental_id' => $dropoff_rental_id, // Drop-off rental ID (may be null if not found)
-        'boats_available_in_hourly_boat_rental' => $boat_quantity - $booked_count,
-        'boats_available_in_hourly_boat_rental' => $boat_quantity,
+        'drop_off_rental_id' => $dropoff_rental_id,
+        'boats_available_in_hourly_boat_rental' => $boats_available,
         'boats_available_in_drop_off_rental' => $dropoff_boats_available,
         'slots' => $time_slots,
-        'booked_count' => $booked_count
+        'booked_count' => array_sum(array_column($time_slots, 'boats_available'))
     ]);
 }
 add_action('wp_ajax_brf_plugin_fetch_time_slots', 'brf_plugin_fetch_time_slots');
 add_action('wp_ajax_nopriv_brf_plugin_fetch_time_slots', 'brf_plugin_fetch_time_slots');
 
+function brf_validate_booking($boat_id, $date, $time_slot, $booking_type = 'hourly') {
+    $boat_hours = intval(get_field('booking_hours', $boat_id)) ?: 2;
+    $boats_available = intval(get_field('boats_available', $boat_id)) ?: 3; // Use new field
+    $start_time = strtotime($time_slot);
+    $end_time = strtotime("+$boat_hours hours", $start_time);
 
+    // Collect booked ranges
+    $booked_ranges = [];
+    $booking_query = new WP_Query([
+        'post_type' => 'booking',
+        'posts_per_page' => -1,
+        'meta_query' => [
+            ['key' => 'boat_id', 'value' => $boat_id, 'compare' => '='],
+            ['key' => 'booking_date', 'value' => $date, 'compare' => '='],
+            ['key' => 'booking_status', 'value' => 'confirmed', 'compare' => '='],
+        ]
+    ]);
 
-// 
+    while ($booking_query->have_posts()) {
+        $booking_query->the_post();
+        $slot = get_post_meta(get_the_ID(), 'time_slot', true);
+        $booked_start = strtotime($slot);
+        $booked_end = strtotime("+$boat_hours hours", $booked_start);
+        $booked_ranges[] = ['start' => $booked_start, 'end' => $booked_end];
+    }
+    wp_reset_postdata();
 
+    $interlinked_boat = get_field('interlinked_boat', $boat_id);
+    $interlinked_boat_id = is_object($interlinked_boat) ? $interlinked_boat->ID : $interlinked_boat;
+    if ($interlinked_boat_id) {
+        $dropoff_query = new WP_Query([
+            'post_type' => 'drop-off-rental-book',
+            'posts_per_page' => -1,
+            'meta_query' => [
+                ['key' => 'interlinked_boat', 'value' => $interlinked_boat_id, 'compare' => '='],
+                ['key' => 'booking_date', 'value' => $date, 'compare' => '<=', 'type' => 'DATE'],
+                ['key' => 'booking_end_date', 'value' => $date, 'compare' => '>=', 'type' => 'DATE'],
+                ['key' => 'booking_status', 'value' => 'confirmed', 'compare' => '='],
+            ]
+        ]);
 
+        while ($dropoff_query->have_posts()) {
+            $dropoff_query->the_post();
+            $slot = get_post_meta(get_the_ID(), 'time_slot', true);
+            $booked_start = strtotime($slot);
+            $booked_end = strtotime("+$boat_hours hours", $booked_start);
+            $booked_ranges[] = ['start' => $booked_start, 'end' => $booked_end];
+        }
+        wp_reset_postdata();
+    }
 
+    // Check availability for the 2-hour window
+    $max_booked = 0;
+    for ($check_time = $start_time; $check_time < $end_time; $check_time += 1800) {
+        $booked_in_slot = 0;
+        foreach ($booked_ranges as $range) {
+            if ($check_time >= $range['start'] && $check_time < $range['end']) {
+                $booked_in_slot++;
+            }
+        }
+        $max_booked = max($max_booked, $booked_in_slot);
+    }
 
+    return $max_booked < $boats_available;
+}
