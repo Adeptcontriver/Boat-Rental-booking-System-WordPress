@@ -1,4 +1,44 @@
-
+<!-- Damage Deposite -->
+<script>
+    jQuery(document).ready(function($) {
+        $('#capture_damage_deposit').on('click', function() {
+            var post_id = $('#post_ID').val(); // Get the current post ID
+            var nonce = captureReleaseData.security_nonce;
+    
+            $.post(captureReleaseData.ajax_url, {
+                action: 'capture_damage_deposit',
+                post_id: post_id,
+                security_nonce: nonce
+            }, function(response) {
+                if (response.success) {
+                    alert(response.data.message);
+                    location.reload(); // Reload the page to update the button status
+                } else {
+                    alert('Error: ' + response.data.message);
+                }
+            });
+        });
+    
+        $('#release_damage_deposit').on('click', function() {
+            var post_id = $('#post_ID').val(); // Get the current post ID
+            var nonce = captureReleaseData.security_nonce;
+    
+            $.post(captureReleaseData.ajax_url, {
+                action: 'release_damage_deposit',
+                post_id: post_id,
+                security_nonce: nonce
+            }, function(response) {
+                if (response.success) {
+                    alert(response.data.message);
+                    location.reload(); // Reload the page to update the button status
+                } else {
+                    alert('Error: ' + response.data.message);
+                }
+            });
+        });
+    });</script>
+    
+    
     <!-- Coupon Code -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -6,7 +46,7 @@
         const couponInput = document.getElementById('gf-coupon-input');
         const couponFeedback = document.getElementById('gf-coupon-feedback');
         const percentageField = document.getElementById('input_3_90');
-        const ajaxurl = 'https://stjosephboatrentals.mystagingwebsite.com/wp-admin/admin-ajax.php'
+        const ajaxurl = 'https://www.stjosephboatrentals.com/wp-admin/admin-ajax.php'
     
         if (couponSubmit && couponInput && couponFeedback && percentageField) {
             couponSubmit.addEventListener('click', function(e) {
@@ -97,7 +137,7 @@
                 console.log("DEBUG: Calendar element found");
     
                 // Get today's date in YYYY-MM-DD format
-                const today = new Date().toISOString().split('T')[0];
+                const today =new Date('2025-05-16').toISOString().split('T')[0];
                 currentSelectedDate = today; // Set the initial selected date
     
                 calendar = new FullCalendar.Calendar(calendarEl, {
@@ -264,7 +304,7 @@
     
         // Add event listener for the "Book Now" button
         const bookNowBtn = document.getElementById('fc-book-now-btn'); // Unique ID
-        if (bookNowBtn) {
+      if (bookNowBtn) {
             bookNowBtn.addEventListener('click', function () {
                 const selectedTime = document.getElementById('fc-selected-time').value; // Unique ID
                 const boatId = document.getElementById('fc-boat-id').value; // Unique ID
@@ -281,6 +321,7 @@
                 window.location.href = '/fishing-charters-booking/' + query;
             });
         }
+    
     
         // Add event listener for the "Check Availability" button
         const checkAvailabilityBtn = document.getElementById('fc-check-availability-btn'); // Unique ID
@@ -309,291 +350,295 @@
         }
     });
     </script>
-    
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            console.log("drop-off-rental Booking Plugin script loaded");
-        
-            // Initialize FullCalendar
-            let calendar;
-            let currentSelectedDate = ''; // Track the currently selected date
-        
-            function initializeCalendar() {
-                const calendarEl = document.getElementById('dor-booking-calendar'); // Unique ID
-                if (calendarEl) {
-                    console.log("DEBUG: Calendar element found");
-        
-                    // Get today's date in YYYY-MM-DD format
-                    const today = new Date('2025-05-16').toISOString().split('T')[0];
-                    currentSelectedDate = today; // Set the initial selected date
-        
-                    calendar = new FullCalendar.Calendar(calendarEl, {
-                        initialView: 'dayGridMonth',
-                        initialDate: today, // Set the initial date to today
-                        selectable: true,
-                        validRange: {
-                            start: today, // Disable past dates
-                        },
-                        dateClick: function (info) {
-                            const selectedDate = info.dateStr;
-        
-                            // Block specific dates (format: YYYY-MM-DD)
-                            const blockedDates = ['2025-07-04', '2025-07-05', '2025-07-06'];
-                            if (blockedDates.includes(selectedDate)) {
-                                showUnavailableMessage(selectedDate);
-                                return; // Prevent further actions
-                            }
-        
-                            console.log("DEBUG: Selected date:", selectedDate);
-                            updateSelectedDateTitle(selectedDate);
-                            fetchTimeSlots(selectedDate);
-                            highlightSelectedDate(selectedDate); // Highlight the selected date
-                        },
-                        dayCellDidMount: function(info) {
-                            const blockedDates = ['2025-07-04', '2025-07-05', '2025-07-06'];
-                            if (blockedDates.includes(info.date.toISOString().split('T')[0])) {
-                                info.el.style.backgroundColor = '#f8d7da'; // Light red
-                                info.el.style.cursor = 'not-allowed';
-                            }
-                        }
-                    });
-        
-                    calendar.render();
-                    console.log("DEBUG: Calendar initialized");
-        
-                    // Automatically select today's date
-                    updateSelectedDateTitle(today);
-                    fetchTimeSlots(today);
-                    highlightSelectedDate(today); // Highlight today's date
-                } else {
-                    console.error("DEBUG: Calendar container not found");
-                }
-            }
-        
-            // Initialize the calendar on page load
-            initializeCalendar();
-        
-            // Function to update the selected date title
-            function updateSelectedDateTitle(selectedDate) {
-                const selectedDateTitle = document.getElementById('dor-selected-date-title'); // Unique ID
-                if (selectedDateTitle) {
-                    selectedDateTitle.innerText = 'Selected Date: ' + selectedDate;
-                }
-            }
-        
-            // Function to fetch time slots for the selected date
-            function fetchTimeSlots(selectedDate) {
-                const boatId = document.getElementById('dor-boat-id').value; // Unique ID
-                if (!boatId) {
-                    console.error("DEBUG: Boat ID is not set.");
-                    return;
-                }
-        
-                console.log(selectedDate);
-        
-                // Clear the existing time slots
-                const timeSlotsContainer = document.getElementById('dor-dynamic-time-slots-container'); // Unique ID
-                if (timeSlotsContainer) {
-                    timeSlotsContainer.innerHTML = '<p>Loading time slots...</p>';
-                }
-        
-                jQuery.ajax({
-                    url: boatRentalAjax.ajax_url, // Ensure this is defined in your localized script
-                    type: 'POST',
-                    data: {
-                        action: 'drop_off_rental_fetch_time_slots', // Use the correct action for fishing-charter
-                        date: selectedDate, // Use the selected date format
-                        boat_id: boatId,
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log("drop-off-rental Booking Plugin script loaded");
+    
+        // Initialize FullCalendar
+        let calendar;
+        let currentSelectedDate = ''; // Track the currently selected date
+    
+        function initializeCalendar() {
+            const calendarEl = document.getElementById('dor-booking-calendar'); // Unique ID
+            if (calendarEl) {
+                console.log("DEBUG: Calendar element found");
+    
+                // Get today's date in YYYY-MM-DD format
+                const today = new Date('2025-05-16').toISOString().split('T')[0];
+                currentSelectedDate = today; // Set the initial selected date
+    
+                calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    initialDate: today, // Set the initial date to today
+                    selectable: true,
+                    validRange: {
+                        start: today, // Disable past dates
                     },
-               success: function (response) {
-                        console.log("DEBUG: AJAX response for time slots:", response);
-                        if (response.success) {
-                            const slots = response.data.slots;
-                            let slotsHtml = '';
-                            if (slots.length > 0) {
-        
-        
-                                slotsHtml = '<ul id="dor-time-slot-list">'; // Unique ID
-                                slots.forEach(slot => {
-                               if (slot.available > 0) {
-        
-                                const boatsAvailable = slot.boats_available !== null ? slot.boats_available : 0;
-                                
-                            slotsHtml += `
-                                            <li>
-                                                <button class="dor-time-slot" data-time="${slot.time}">
-                                                    ${slot.time} - Boats Available: ${boatsAvailable}
-                                                </button>
-                                            </li>
-                                        `;
-        } else {
-            slotsHtml += `
-                <li>
-                    <button class="dor-time-slot unavailable" data-time="${slot.time}" disabled>
-                        ${slot.time} - Boats Available: ${boatsAvailable} (Fully Booked)
-                    </button>
-                </li>
-            `;
+                    dateClick: function (info) {
+                        const selectedDate = info.dateStr;
+    
+                        // Block specific dates (format: YYYY-MM-DD)
+                        const blockedDates = ['2025-07-04', '2025-07-05', '2025-07-06'];
+                        if (blockedDates.includes(selectedDate)) {
+                            showUnavailableMessage(selectedDate);
+                            return; // Prevent further actions
+                        }
+    
+                        console.log("DEBUG: Selected date:", selectedDate);
+                        updateSelectedDateTitle(selectedDate);
+                        fetchTimeSlots(selectedDate);
+                        highlightSelectedDate(selectedDate); // Highlight the selected date
+                    },
+                    dayCellDidMount: function(info) {
+                        const blockedDates = ['2025-07-04', '2025-07-05', '2025-07-06'];
+                        if (blockedDates.includes(info.date.toISOString().split('T')[0])) {
+                            info.el.style.backgroundColor = '#f8d7da'; // Light red
+                            info.el.style.cursor = 'not-allowed';
+                        }
+                    }
+                });
+    
+                calendar.render();
+                console.log("DEBUG: Calendar initialized");
+    
+                // Automatically select today's date
+                updateSelectedDateTitle(today);
+                fetchTimeSlots(today);
+                highlightSelectedDate(today); // Highlight today's date
+            } else {
+                console.error("DEBUG: Calendar container not found");
+            }
         }
-                                });
-                                slotsHtml += '</ul>';
+    
+        // Initialize the calendar on page load
+        initializeCalendar();
+    
+        // Function to update the selected date title
+        function updateSelectedDateTitle(selectedDate) {
+            const selectedDateTitle = document.getElementById('dor-selected-date-title'); // Unique ID
+            if (selectedDateTitle) {
+                selectedDateTitle.innerText = 'Selected Date: ' + selectedDate;
+            }
+        }
+    
+        // Function to fetch time slots for the selected date
+        function fetchTimeSlots(selectedDate) {
+            const boatId = document.getElementById('dor-boat-id').value; // Unique ID
+            if (!boatId) {
+                console.error("DEBUG: Boat ID is not set.");
+                return;
+            }
+    
+            console.log(selectedDate);
+    
+            // Clear the existing time slots
+            const timeSlotsContainer = document.getElementById('dor-dynamic-time-slots-container'); // Unique ID
+            if (timeSlotsContainer) {
+                timeSlotsContainer.innerHTML = '<p>Loading time slots...</p>';
+            }
+    
+            jQuery.ajax({
+                url: boatRentalAjax.ajax_url, // Ensure this is defined in your localized script
+                type: 'POST',
+                data: {
+                    action: 'drop_off_rental_fetch_time_slots', // Use the correct action for fishing-charter
+                    date: selectedDate, // Use the selected date format
+                    boat_id: boatId,
+                },
+           success: function (response) {
+                    console.log("DEBUG: AJAX response for time slots:", response);
+                    if (response.success) {
+                        const slots = response.data.slots;
+                        let slotsHtml = '';
+                        if (slots.length > 0) {
+    
+    
+                            slotsHtml = '<ul id="dor-time-slot-list">'; // Unique ID
+                            slots.forEach(slot => {
+                            // Define boatsAvailable in the outer scope
+                            const boatsAvailable = typeof slot.boats_available === 'number' && !isNaN(slot.boats_available)
+                                ? slot.boats_available
+                                : 0;
+                            // Sanitize slot.time
+                            const safeTime = slot.time.replace(/[<>"'&]/g, '');
+    
+                            if (slot.available === true) {
+                                slotsHtml += `
+                                    <li>
+                                        <button class="dor-time-slot" data-time="${safeTime}">
+                                            ${safeTime} - Boats Available: ${boatsAvailable}
+                                        </button>
+                                    </li>
+                                `;
                             } else {
-                                slotsHtml = '<p>No slots available for ' + selectedDate + '</p>';
+                                slotsHtml += `
+                                    <li>
+                                        <button class="dor-time-slot unavailable" data-time="${safeTime}" disabled>
+                                            ${safeTime} - Fully Booked
+                                        </button>
+                                    </li>
+                                `;
                             }
-                            if (timeSlotsContainer) {
-                                timeSlotsContainer.innerHTML = slotsHtml;
-        
-                                // Add event listeners to time slot buttons
-                                document.querySelectorAll('.dor-time-slot').forEach(button => { // Unique Class
-                                    button.addEventListener('click', function () {
-                                        // Deselect previously selected buttons
-                                        document.querySelectorAll('.dor-time-slot').forEach(btn => btn.classList.remove('selected')); // Unique Class
-        
-                                        // Mark this button as selected
-                                        this.classList.add('selected');
-        
-                                        // Enable the "Book Now" button
-                                        const bookNowBtn = document.getElementById('dor-book-now-btn'); // Unique ID
-                                        if (bookNowBtn) {
-                                            bookNowBtn.disabled = false;
-                                        }
-        
-                                        // Set the selected time in the hidden field
-                                        const selectedTimeInput = document.getElementById('dor-selected-time'); // Unique ID
-                                        if (selectedTimeInput) {
-                                            selectedTimeInput.value = this.dataset.time;
-                                        }
-                                    });
+                        });
+    slotsHtml += '</ul>';
+    } else {
+        slotsHtml = '<p>No slots available for ' + selectedDate + '</p>';
+    }
+                        if (timeSlotsContainer) {
+                            timeSlotsContainer.innerHTML = slotsHtml;
+    
+                            // Add event listeners to time slot buttons
+                            document.querySelectorAll('.dor-time-slot').forEach(button => { // Unique Class
+                                button.addEventListener('click', function () {
+                                    // Deselect previously selected buttons
+                                    document.querySelectorAll('.dor-time-slot').forEach(btn => btn.classList.remove('selected')); // Unique Class
+    
+                                    // Mark this button as selected
+                                    this.classList.add('selected');
+    
+                                    // Enable the "Book Now" button
+                                    const bookNowBtn = document.getElementById('dor-book-now-btn'); // Unique ID
+                                    if (bookNowBtn) {
+                                        bookNowBtn.disabled = false;
+                                    }
+    
+                                    // Set the selected time in the hidden field
+                                    const selectedTimeInput = document.getElementById('dor-selected-time'); // Unique ID
+                                    if (selectedTimeInput) {
+                                        selectedTimeInput.value = this.dataset.time;
+                                    }
                                 });
-                            }
-                        } else {
-                            if (timeSlotsContainer) {
-                                timeSlotsContainer.innerHTML = '<p>Error fetching time slots.</p>';
-                            }
+                            });
                         }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.error("AJAX Error:", textStatus, errorThrown);
-                        const timeSlotsContainer = document.getElementById('dor-dynamic-time-slots-container'); // Unique ID
+                    } else {
                         if (timeSlotsContainer) {
                             timeSlotsContainer.innerHTML = '<p>Error fetching time slots.</p>';
                         }
-                    },
-                });
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("AJAX Error:", textStatus, errorThrown);
+                    const timeSlotsContainer = document.getElementById('dor-dynamic-time-slots-container'); // Unique ID
+                    if (timeSlotsContainer) {
+                        timeSlotsContainer.innerHTML = '<p>Error fetching time slots.</p>';
+                    }
+                },
+            });
+        }
+    
+        // Function to highlight the selected date in the calendar
+        function highlightSelectedDate(selectedDate) {
+            // Remove highlight from previously selected date
+            document.querySelectorAll('.selected-day').forEach(function (el) {
+                el.classList.remove('selected-day');
+            });
+    
+            // Highlight the new selected date
+            const selectedCell = document.querySelector('[data-date="' + selectedDate + '"]');
+            if (selectedCell) {
+                selectedCell.classList.add('selected-day');
             }
-        
-            // Function to highlight the selected date in the calendar
-            function highlightSelectedDate(selectedDate) {
-                // Remove highlight from previously selected date
-                document.querySelectorAll('.selected-day').forEach(function (el) {
-                    el.classList.remove('selected-day');
-                });
-        
-                // Highlight the new selected date
-                const selectedCell = document.querySelector('[data-date="' + selectedDate + '"]');
-                if (selectedCell) {
-                    selectedCell.classList.add('selected-day');
-                }
+        }
+    
+        // Function to show message when a blocked date is selected
+        function showUnavailableMessage(selectedDate) {
+            const messageContainer = document.getElementById('dor-unavailable-message'); // Unique ID for message container
+            if (messageContainer) {
+                messageContainer.innerHTML = `<div class="unavailable-message">
+                    <strong>Booking unavailable for ${selectedDate}</strong><br>
+                    This date is blocked for maintenance or other reasons. Please select another date.
+                </div>`;
+                messageContainer.style.display = 'block'; // Show the message
+    
+                setTimeout(() => {
+                    messageContainer.style.display = 'none'; // Hide the message after 5 seconds
+                }, 5000);
             }
-        
-            // Function to show message when a blocked date is selected
-            function showUnavailableMessage(selectedDate) {
-                const messageContainer = document.getElementById('dor-unavailable-message'); // Unique ID for message container
-                if (messageContainer) {
-                    messageContainer.innerHTML = `<div class="unavailable-message">
-                        <strong>Booking unavailable for ${selectedDate}</strong><br>
-                        This date is blocked for maintenance or other reasons. Please select another date.
-                    </div>`;
-                    messageContainer.style.display = 'block'; // Show the message
-        
-                    setTimeout(() => {
-                        messageContainer.style.display = 'none'; // Hide the message after 5 seconds
-                    }, 5000);
-                }
+        }
+    
+        // Add event listener for the "Book Now" button
+        const bookNowBtn = document.getElementById('dor-book-now-btn'); // Unique ID
+        if (bookNowBtn) {
+            bookNowBtn.addEventListener('click', function () {
+                const selectedTime = document.getElementById('dor-selected-time').value;
+                const boatId = document.getElementById('dor-boat-id').value;
+                const dateTitle = document.getElementById('dor-selected-date-title').textContent;
+                const selectedDate = dateTitle.replace('Selected Date: ', '');
+    
+                // Fetch booking_days from WordPress REST API
+                fetch(`/wp-json/wp/v2/drop-off-rental/${boatId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Get booking_days from ACF
+                        const bookingDays = data.acf.booking_days || 1; // Default to 1 if missing
+                        const interLinkedboats = data.acf.interlinked_boat || 1;
+                        
+                        // Show alert with booking_days
+                        // alert(`Booking Duration: ${bookingDays} day(s)`);
+    
+                        // Calculate booking_end_date (selected date + booking_days)
+                        const bookingStart = new Date(selectedDate);
+                        
+                        const bookingEndDate = new Date(bookingStart);
+                        bookingEndDate.setDate(bookingEndDate.getDate() + bookingDays );
+                        const formattedBookingEndDate = bookingEndDate.toISOString().split('T')[0]; // "2025-05-16"
+                        
+                        // Build query string with booking_days
+                        const query = `?boat_id=${encodeURIComponent(boatId)}&time_slot=${encodeURIComponent(selectedTime)}&date=${encodeURIComponent(selectedDate)}&booking_end_date=${encodeURIComponent(formattedBookingEndDate)}&booking_days=${encodeURIComponent(bookingDays)}&interlinked_boat=${encodeURIComponent(interLinkedboats)}`;
+    
+                        // Redirect to booking page
+                        window.location.href = '/drop-off-rental-boat-booking/' + query;
+                    })
+                    .catch(error => {
+                        console.error("Error fetching booking days:", error);
+                        alert("Could not fetch booking details. Defaulting to 1 day.");
+                        
+                        // Fallback to 1 day if API fails
+                        const bookingDays = 1;
+                        const bookingStart = new Date(selectedDate);
+                        const endDate = new Date(bookingStart);
+                        endDate.setDate(bookingStart.getDate() + bookingDays);
+    
+                        const year = endDate.getFullYear();
+                        const month = String(endDate.getMonth() + 1).padStart(2, '0');
+                        const day = String(endDate.getDate()).padStart(2, '0');
+                        const bookingEndDate = `${year}-${month}-${day}`;
+    
+                        const query = `?boat_id=${encodeURIComponent(boatId)}&time_slot=${encodeURIComponent(selectedTime)}&date=${encodeURIComponent(selectedDate)}&booking_end_date=${encodeURIComponent(bookingEndDate)}&booking_days=1`;
+    
+                        window.location.href = '/drop-off-rental-boat-booking/' + query;
+                    });
+            });
+        }
+    
+        // Add event listener for the "Check Availability" button
+        const checkAvailabilityBtn = document.getElementById('dor-check-availability-btn'); // Unique ID
+        if (checkAvailabilityBtn) {
+            checkAvailabilityBtn.addEventListener('click', function () {
+                const selectedDate = document.getElementById('dor-selected-date-title').textContent.replace('Selected Date: ', '');
+                checkNextAvailability(selectedDate);
+            });
+        }
+    
+        // Function: Check Next Availability (increments date by one day)
+        function checkNextAvailability(currentDate) {
+            const dateObj = new Date(currentDate);
+            dateObj.setDate(dateObj.getDate() + 1);
+            const nextDate = dateObj.toISOString().split('T')[0];
+    
+            if (nextDate === currentSelectedDate) {
+                console.log("Already displaying that date, skipping re-fetch.");
+                return;
             }
-        
-            // Add event listener for the "Book Now" button
-            const bookNowBtn = document.getElementById('dor-book-now-btn'); // Unique ID
-            if (bookNowBtn) {
-                bookNowBtn.addEventListener('click', function () {
-                    const selectedTime = document.getElementById('dor-selected-time').value;
-                    const boatId = document.getElementById('dor-boat-id').value;
-                    const dateTitle = document.getElementById('dor-selected-date-title').textContent;
-                    const selectedDate = dateTitle.replace('Selected Date: ', '');
-        
-                    // Fetch booking_days from WordPress REST API
-                    fetch(`/wp-json/wp/v2/drop-off-rental/${boatId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            // Get booking_days from ACF
-                            const bookingDays = data.acf.booking_days || 1; // Default to 1 if missing
-                            const interLinkedboats = data.acf.interlinked_boat || 1;
-                            
-                            // Show alert with booking_days
-                            // alert(`Booking Duration: ${bookingDays} day(s)`);
-        
-                            // Calculate booking_end_date (selected date + booking_days)
-                            const bookingStart = new Date(selectedDate);
-                            
-                            const bookingEndDate = new Date(bookingStart);
-                            bookingEndDate.setDate(bookingEndDate.getDate() + bookingDays );
-                            const formattedBookingEndDate = bookingEndDate.toISOString().split('T')[0]; // "2025-05-16"
-                            
-                            // Build query string with booking_days
-                            const query = `?boat_id=${encodeURIComponent(boatId)}&time_slot=${encodeURIComponent(selectedTime)}&date=${encodeURIComponent(selectedDate)}&booking_end_date=${encodeURIComponent(formattedBookingEndDate)}&booking_days=${encodeURIComponent(bookingDays)}&interlinked_boat=${encodeURIComponent(interLinkedboats)}`;
-        
-                            // Redirect to booking page
-                            window.location.href = '/drop-off-rental-boat-booking/' + query;
-                        })
-                        .catch(error => {
-                            console.error("Error fetching booking days:", error);
-                            alert("Could not fetch booking details. Defaulting to 1 day.");
-                            
-                            // Fallback to 1 day if API fails
-                            const bookingDays = 1;
-                            const bookingStart = new Date(selectedDate);
-                            const endDate = new Date(bookingStart);
-                            endDate.setDate(bookingStart.getDate() + bookingDays);
-        
-                            const year = endDate.getFullYear();
-                            const month = String(endDate.getMonth() + 1).padStart(2, '0');
-                            const day = String(endDate.getDate()).padStart(2, '0');
-                            const bookingEndDate = `${year}-${month}-${day}`;
-        
-                            const query = `?boat_id=${encodeURIComponent(boatId)}&time_slot=${encodeURIComponent(selectedTime)}&date=${encodeURIComponent(selectedDate)}&booking_end_date=${encodeURIComponent(bookingEndDate)}&booking_days=1`;
-        
-                            window.location.href = '/drop-off-rental-boat-booking/' + query;
-                        });
-                });
-            }
-        
-            // Add event listener for the "Check Availability" button
-            const checkAvailabilityBtn = document.getElementById('dor-check-availability-btn'); // Unique ID
-            if (checkAvailabilityBtn) {
-                checkAvailabilityBtn.addEventListener('click', function () {
-                    const selectedDate = document.getElementById('dor-selected-date-title').textContent.replace('Selected Date: ', '');
-                    checkNextAvailability(selectedDate);
-                });
-            }
-        
-            // Function: Check Next Availability (increments date by one day)
-            function checkNextAvailability(currentDate) {
-                const dateObj = new Date(currentDate);
-                dateObj.setDate(dateObj.getDate() + 1);
-                const nextDate = dateObj.toISOString().split('T')[0];
-        
-                if (nextDate === currentSelectedDate) {
-                    console.log("Already displaying that date, skipping re-fetch.");
-                    return;
-                }
-        
-                currentSelectedDate = nextDate;
-                fetchTimeSlots(nextDate); // Fetch time slots for the next date
-                updateSelectedDateTitle(nextDate); // Update the selected date title
-                highlightSelectedDate(nextDate); // Highlight the next date in the calendar
-            }
-        });
-        </script>
+    
+            currentSelectedDate = nextDate;
+            fetchTimeSlots(nextDate); // Fetch time slots for the next date
+            updateSelectedDateTitle(nextDate); // Update the selected date title
+            highlightSelectedDate(nextDate); // Highlight the next date in the calendar
+        }
+    });
+    </script>
+    
     
     <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -609,7 +654,7 @@
                 console.log("DEBUG: Calendar element found");
     
                 // Get today's date in YYYY-MM-DD format
-                const today = new Date().toISOString().split('T')[0];
+                const today = new Date('2025-05-16').toISOString().split('T')[0];
                 currentSelectedDate = today; // Set the initial selected date
     
                 calendar = new FullCalendar.Calendar(calendarEl, {
@@ -824,7 +869,6 @@
     
     
     </script>
-    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Replace 'input_5_1' with the actual ID of your field
@@ -836,13 +880,14 @@
             }
         });
         </script>
+        
         <script>
-        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function() {
           console.log("Check Availability script loaded");
         
           let checkAvailabilitySelectedDate = null; // Unique variable to avoid conflicts
         
-          var today = new Date();
+          var today = new Date('2025-05-16');
           var isoToday = today.toISOString().split('T')[0];
         
           checkAvailabilitySelectedDate = isoToday;
@@ -911,8 +956,9 @@
               url: boatRentalAjax.ajax_url,
               type: 'POST',
               data: {
-                action: 'fetch_time_slots',
-                date: selectedDate,
+        //         action: 'fetch_time_slots',
+                action: 'brf_plugin_fetch_time_slots',
+                  date: selectedDate,
                 boat_id: boatId
               },
               success: function(response) {
@@ -923,8 +969,9 @@
                       var timeStr = slotObj.time;
                       var btn = document.createElement('button');
                       btn.classList.add('booking-time-slot'); // Ensure styling is applied
-                      btn.textContent = timeStr + (slotObj.available ? '' : ' (Not Available)');
+                      btn.textContent = timeStr + (slotObj.available ? ' - Boats Available: ' + slotObj.boats_available : ' (Not Available)');
                       btn.dataset.time = timeStr;
+                        
                       if (!slotObj.available) {
                         btn.disabled = true;
                         btn.classList.add('booking-booked-slot');
@@ -955,5 +1002,6 @@
             });
           }
         });
-        </script>
         
+        
+        </script>
